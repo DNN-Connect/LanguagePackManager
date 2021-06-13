@@ -1,0 +1,34 @@
+@inherits LanguagePackManagerWebPage<PackageLink>
+@using Connect.LanguagePackManager.Core.Models.PackageLinks;
+@using Connect.LanguagePackManager.Core.Repositories;
+@using Connect.LanguagePackManager.Presentation.Common;
+
+<h1>@Dnn.LocalizeString("Edit.Title")</h1>
+
+<table class="table">
+  <tbody>
+    <tr>
+      <th>@Dnn.LocalizeString("Name")</th>
+      <td>@Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = Dnn.LocalizeString("Name") })</td>
+    </tr>
+    <tr>
+      <th>@Dnn.LocalizeString("OrgName")</th>
+      <td>@Html.TextBoxFor(m => m.OrgName, new { @class = "form-control", placeholder = Dnn.LocalizeString("OrgName") })</td>
+    </tr>
+    <tr>
+      <th>@Dnn.LocalizeString("RepoName")</th>
+      <td>@Html.TextBoxFor(m => m.RepoName, new { @class = "form-control", placeholder = Dnn.LocalizeString("RepoName") })</td>
+    </tr>
+    <tr>
+      <th>@Dnn.LocalizeString("AssetRegex")</th>
+      <td>@Html.TextBoxFor(m => m.AssetRegex, new { @class = "form-control", placeholder = Dnn.LocalizeString("AssetRegex") })</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<div>
+  <a href="@Url.Action("Index", "Links")" class="dnnSecondaryAction">@Dnn.LocalizeString("Cancel")</a>
+  <button value="submit" class="dnnPrimaryAction">@Dnn.LocalizeString("Save")</button>
+</div>
+

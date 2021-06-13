@@ -4,14 +4,8 @@
   LanguagePackManagerModuleContext.AddModuleScript();
 }
 
-<h1>Hello LanguagePackManager Module</h1>
+<h1>LanguagePack Manager</h1>
 
-<div class="DNN ConnectLanguagePackManager LanguagePackManager"
-     data-locale="@System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName"
-     data-moduleid="@Dnn.ActiveModule.ModuleID"
-     data-tabid="@Dnn.ActiveModule.TabID"
-     data-portalid="@Dnn.PortalSettings.PortalId"
-     data-resources="@SerializedResources()"
-     data-security="@(Newtonsoft.Json.JsonConvert.SerializeObject(LanguagePackManagerModuleContext.Security))"
-     >
+<div>
+  <a href="@Url.Action("Index", "Links")">Package Links</a>
 </div>
