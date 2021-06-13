@@ -11,7 +11,7 @@
     "moduleName": "Connect_LanguagePackManager",
     "foldername": "Connect/LanguagePackManager",
     "businessControllerClass": "Connect.LanguagePackManager.Presentation.Common.ModuleController, CONNECT.LANGUAGEPACKMANAGER.PRESENTATION",
-    "supportedFeatures": [ "Portable" ],
+    "supportedFeatures": ["Portable"],
     "moduleDefinitions": [
       {
         "friendlyName": "DNN Connect LanguagePack Manager",
@@ -46,7 +46,10 @@
   "pathsAndFiles": {
     "pathToAssemblies": "./bin",
     "pathToScripts": "./Server/SqlScripts",
-    "assemblies": [ "Connect.LanguagePackManager.Presentation.dll" ],
-    "excludeFilter": [ "LanguagePackManager/bin/", "LanguagePackManager/obj/" ]
+    "assemblies": [
+      "Connect.LanguagePackManager.Presentation.dll",
+      "Connect.LanguagePackManager.Core.dll"
+    ],
+    "excludeFilter": ["LanguagePackManager/bin/", "LanguagePackManager/obj/"]
   }
 }

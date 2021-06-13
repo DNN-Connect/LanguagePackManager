@@ -64,7 +64,7 @@ public sealed class BuildTask : FrostingTask<BuildContext>
         context.CleanDirectory(context.Solution.dnn.pathsAndFiles.pathToAssemblies);
         context.NuGetRestore(context.Solution.dnn.pathsAndFiles.solutionFile);
         context.MSBuild(context.Solution.dnn.pathsAndFiles.solutionFile, context.BuildSettings);
-        context.NpmRunScript("build");
+        // context.NpmRunScript("build");
     }
 }
 

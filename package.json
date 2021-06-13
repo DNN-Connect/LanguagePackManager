@@ -1,6 +1,6 @@
 {
   "name": "languagepackmanager",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "DNN Language Pack Manager",
   "dnn": {
     "projectFolders": [
@@ -52,5 +52,10 @@
     "watch": "webpack --config Client/webpack.config.js --progress --watch",
     "watch-server": "node watch.js"
   },
-  "author": "Peter Donker"
+  "author": "Peter Donker",
+  "devDependencies": {
+    "chokidar": "^3.5.1",
+    "deepmerge": "^4.2.2",
+    "fs-extra": "^10.0.0"
+  }
 }
