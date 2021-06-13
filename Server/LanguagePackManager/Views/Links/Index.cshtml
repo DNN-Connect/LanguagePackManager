@@ -1,0 +1,42 @@
+@inherits LanguagePackManagerWebPage
+@using Connect.LanguagePackManager.Core.Repositories;
+@using Connect.LanguagePackManager.Presentation.Common;
+@using System.Linq;
+@{
+  var links = PackageLinkRepository.Instance.GetPackageLinks(Dnn.ModuleContext.ModuleId).OrderBy(l => l.Name);
+}
+
+<h1>Links</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Org Name</th>
+      <th>Repo Name</th>
+      <th>Asset Regex</th>
+      <th>Last Checked</th>
+      <th>Last Version</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var link in links)
+    {
+      <tr>
+        <td>@link.Name</td>
+        <td>@link.OrgName</td>
+        <td>@link.RepoName</td>
+        <td>@link.AssetRegex</td>
+        <td>@link.LastChecked</td>
+        <td>@link.LastDownloadedVersion</td>
+        <td><a href="@Url.Action("Edit", "Links", new { LinkId = link.PackageLinkId })">edit</a></td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<div>
+  <a href="@Url.Action("Edit", "Links", new { LinkId = -1 })">new</a>
+</div>
+

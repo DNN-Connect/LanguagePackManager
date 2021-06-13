@@ -1,0 +1,320 @@
+/******* TABLES *******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_PackageLinks') AND type in (N'U'))
+BEGIN
+CREATE TABLE {databaseOwner}{objectQualifier}Connect_LPM_PackageLinks(
+ [PackageLinkId] [int] IDENTITY(1,1) NOT NULL,
+ [ModuleId] [int] NOT NULL,
+ [Name] [nvarchar](100) NOT NULL,
+ [OrgName] [nvarchar](100) NOT NULL,
+ [RepoName] [nvarchar](100) NOT NULL,
+ [AssetRegex] [nvarchar](100) NOT NULL,
+ [LastChecked] [datetime] NULL,
+ [LastDownloadedVersion] [varchar](15) NULL,
+ [CreatedByUserID] [int] NOT NULL,
+ [CreatedOnDate] [datetime] NOT NULL,
+ [LastModifiedByUserID] [int] NOT NULL,
+ [LastModifiedOnDate] [datetime] NOT NULL,
+ CONSTRAINT PK_{objectQualifier}Connect_LPM_PackageLinks PRIMARY KEY CLUSTERED 
+(
+ [PackageLinkId] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_Packages') AND type in (N'U'))
+BEGIN
+CREATE TABLE {databaseOwner}{objectQualifier}Connect_LPM_Packages(
+ [PackageId] [int] IDENTITY(1,1) NOT NULL,
+ [LinkId] [int] NOT NULL,
+ [ContainedIn] [int] NULL,
+ [PackageName] [nvarchar](128) NOT NULL,
+ [FriendlyName] [nvarchar](250) NOT NULL,
+ [PackageType] [nvarchar](100) NOT NULL,
+ [InstallPath] [nvarchar](255) NOT NULL,
+ [LastVersion] [varchar](15) NULL,
+ CONSTRAINT PK_{objectQualifier}Connect_LPM_Packages PRIMARY KEY CLUSTERED 
+(
+ [PackageId] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_PackageVersions') AND type in (N'U'))
+BEGIN
+CREATE TABLE {databaseOwner}{objectQualifier}Connect_LPM_PackageVersions(
+ [PackageVersionId] [int] IDENTITY(1,1) NOT NULL,
+ [PackageId] [int] NOT NULL,
+ [Version] [varchar](15) NOT NULL,
+ [ReleaseDate] [datetime] NOT NULL,
+ [Downloaded] [datetime] NOT NULL,
+ CONSTRAINT PK_{objectQualifier}Connect_LPM_PackageVersions PRIMARY KEY CLUSTERED 
+(
+ [PackageVersionId] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_ResourceFiles') AND type in (N'U'))
+BEGIN
+CREATE TABLE {databaseOwner}{objectQualifier}Connect_LPM_ResourceFiles(
+ [ResourceFileId] [int] IDENTITY(1,1) NOT NULL,
+ [PackageId] [int] NOT NULL,
+ [FilePath] [nvarchar](300) NOT NULL,
+ CONSTRAINT PK_{objectQualifier}Connect_LPM_ResourceFiles PRIMARY KEY CLUSTERED 
+(
+ [ResourceFileId] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_Texts') AND type in (N'U'))
+BEGIN
+CREATE TABLE {databaseOwner}{objectQualifier}Connect_LPM_Texts(
+ [TextId] [int] IDENTITY(1,1) NOT NULL,
+ [PackageVersionId] [int] NOT NULL,
+ [ResourceFileId] [int] NOT NULL,
+ [TextKey] [nvarchar](255) NOT NULL,
+ [OriginalValue] [nvarchar](max) NULL,
+ [DeprecatedInVersionId] [int] NULL,
+ CONSTRAINT PK_{objectQualifier}Connect_LPM_Texts PRIMARY KEY CLUSTERED 
+(
+ [TextId] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+END
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_Translations') AND type in (N'U'))
+BEGIN
+CREATE TABLE {databaseOwner}{objectQualifier}Connect_LPM_Translations(
+ [TextId] [int] NOT NULL,
+ [Locale] [nvarchar](10) NOT NULL,
+ [TextValue] [nvarchar](max) NULL,
+ [CreatedByUserID] [int] NOT NULL,
+ [CreatedOnDate] [datetime] NOT NULL,
+ [LastModifiedByUserID] [int] NOT NULL,
+ [LastModifiedOnDate] [datetime] NOT NULL,
+ CONSTRAINT PK_{objectQualifier}Connect_LPM_Translations PRIMARY KEY CLUSTERED 
+(
+ [TextId] ASC,
+ [Locale] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+END
+GO
+
+/******* STRUCTURE *******/
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'{databaseOwner}FK_{objectQualifier}Connect_LPM_PackageLinks_Modules') AND parent_object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_PackageLinks'))
+ALTER TABLE {databaseOwner}{objectQualifier}Connect_LPM_PackageLinks  WITH CHECK ADD  CONSTRAINT FK_{objectQualifier}Connect_LPM_PackageLinks_Modules FOREIGN KEY([ModuleId])
+REFERENCES {databaseOwner}{objectQualifier}Modules ([ModuleID])
+ON DELETE CASCADE
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'{databaseOwner}FK_{objectQualifier}Connect_LPM_PackageLinks_Modules') AND parent_object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_PackageLinks'))
+ALTER TABLE {databaseOwner}{objectQualifier}Connect_LPM_PackageLinks CHECK CONSTRAINT FK_{objectQualifier}Connect_LPM_PackageLinks_Modules
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'{databaseOwner}FK_{objectQualifier}Connect_LPM_Packages_PackageLinks') AND parent_object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_Packages'))
+ALTER TABLE {databaseOwner}{objectQualifier}Connect_LPM_Packages  WITH CHECK ADD  CONSTRAINT FK_{objectQualifier}Connect_LPM_Packages_PackageLinks FOREIGN KEY([LinkId])
+REFERENCES {databaseOwner}{objectQualifier}Connect_LPM_PackageLinks ([PackageLinkId])
+ON DELETE CASCADE
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'{databaseOwner}FK_{objectQualifier}Connect_LPM_Packages_PackageLinks') AND parent_object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_Packages'))
+ALTER TABLE {databaseOwner}{objectQualifier}Connect_LPM_Packages CHECK CONSTRAINT FK_{objectQualifier}Connect_LPM_Packages_PackageLinks
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'{databaseOwner}FK_{objectQualifier}Connect_LPM_PackageVersions_Packages') AND parent_object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_PackageVersions'))
+ALTER TABLE {databaseOwner}{objectQualifier}Connect_LPM_PackageVersions  WITH CHECK ADD  CONSTRAINT FK_{objectQualifier}Connect_LPM_PackageVersions_Packages FOREIGN KEY([PackageId])
+REFERENCES {databaseOwner}{objectQualifier}Connect_LPM_Packages ([PackageId])
+ON DELETE CASCADE
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'{databaseOwner}FK_{objectQualifier}Connect_LPM_PackageVersions_Packages') AND parent_object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_PackageVersions'))
+ALTER TABLE {databaseOwner}{objectQualifier}Connect_LPM_PackageVersions CHECK CONSTRAINT FK_{objectQualifier}Connect_LPM_PackageVersions_Packages
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'{databaseOwner}FK_{objectQualifier}Connect_LPM_Texts_PackageVersions') AND parent_object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_Texts'))
+ALTER TABLE {databaseOwner}{objectQualifier}Connect_LPM_Texts  WITH CHECK ADD  CONSTRAINT FK_{objectQualifier}Connect_LPM_Texts_PackageVersions FOREIGN KEY([PackageVersionId])
+REFERENCES {databaseOwner}{objectQualifier}Connect_LPM_PackageVersions ([PackageVersionId])
+ON DELETE CASCADE
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'{databaseOwner}FK_{objectQualifier}Connect_LPM_Texts_PackageVersions') AND parent_object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_Texts'))
+ALTER TABLE {databaseOwner}{objectQualifier}Connect_LPM_Texts CHECK CONSTRAINT FK_{objectQualifier}Connect_LPM_Texts_PackageVersions
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'{databaseOwner}FK_{objectQualifier}Connect_LPM_Texts_ResourceFiles') AND parent_object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_Texts'))
+ALTER TABLE {databaseOwner}{objectQualifier}Connect_LPM_Texts  WITH CHECK ADD  CONSTRAINT FK_{objectQualifier}Connect_LPM_Texts_ResourceFiles FOREIGN KEY([ResourceFileId])
+REFERENCES {databaseOwner}{objectQualifier}Connect_LPM_ResourceFiles ([ResourceFileId])
+ON DELETE CASCADE
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'{databaseOwner}FK_{objectQualifier}Connect_LPM_Texts_ResourceFiles') AND parent_object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_Texts'))
+ALTER TABLE {databaseOwner}{objectQualifier}Connect_LPM_Texts CHECK CONSTRAINT FK_{objectQualifier}Connect_LPM_Texts_ResourceFiles
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'{databaseOwner}FK_{objectQualifier}Connect_LPM_Translations_Texts') AND parent_object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_Translations'))
+ALTER TABLE {databaseOwner}{objectQualifier}Connect_LPM_Translations  WITH CHECK ADD  CONSTRAINT FK_{objectQualifier}Connect_LPM_Translations_Texts FOREIGN KEY([TextId])
+REFERENCES {databaseOwner}{objectQualifier}Connect_LPM_Texts ([TextId])
+ON DELETE CASCADE
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'{databaseOwner}FK_{objectQualifier}Connect_LPM_Translations_Texts') AND parent_object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_Translations'))
+ALTER TABLE {databaseOwner}{objectQualifier}Connect_LPM_Translations CHECK CONSTRAINT FK_{objectQualifier}Connect_LPM_Translations_Texts
+GO
+
+/******* TRIGGERS *******/
+/******* VIEWS AND FUNCTIONS *******/
+IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_PackageLinks'))
+DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageLinks
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageLinks
+AS
+SELECT
+ pl.*,
+ cu.DisplayName CreatedByUser,
+ mu.DisplayName ModifiedByUser
+FROM {databaseOwner}{objectQualifier}Connect_LPM_PackageLinks pl
+LEFT JOIN {databaseOwner}{objectQualifier}Users cu ON cu.UserID=pl.CreatedByUserID
+LEFT JOIN {databaseOwner}{objectQualifier}Users mu ON mu.UserID=pl.LastModifiedByUserID
+GO
+
+IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_Packages'))
+DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_Packages
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_Packages
+AS
+SELECT
+ p.*,
+ pl.Name,
+ pl.LastChecked
+FROM {databaseOwner}{objectQualifier}Connect_LPM_Packages p
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageLinks pl ON p.LinkId=p.LinkId
+GO
+
+IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersions'))
+DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersions
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersions
+AS
+SELECT
+ pv.*,
+ p.PackageName,
+ p.PackageType,
+ pl.Name,
+ pl.LastChecked
+FROM {databaseOwner}{objectQualifier}Connect_LPM_PackageVersions pv
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_Packages p ON p.PackageId=pv.PackageId
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageLinks pl ON p.LinkId=p.LinkId
+GO
+
+IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_Texts'))
+DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_Texts
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_Texts
+AS
+SELECT
+ t.*,
+ rf.FilePath,
+ pv.Version,
+ pve.Version DeprecatedInVersion
+FROM {databaseOwner}{objectQualifier}Connect_LPM_Texts t
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageVersions pv ON pv.PackageVersionId=t.PackageVersionId
+LEFT JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageVersions pve ON pve.PackageVersionId=t.DeprecatedInVersionId
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_ResourceFiles rf ON rf.ResourceFileId=t.ResourceFileId
+GO
+
+IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_Translations'))
+DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_Translations
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_Translations
+AS
+SELECT
+ pv.PackageId,
+ tr.*,
+ rf.FilePath,
+ t.TextKey,
+ pv.Version FirstInVersion,
+ pve.Version DeprecatedInVersion,
+ cu.DisplayName CreatedByUser,
+ mu.DisplayName ModifiedByUser
+FROM {databaseOwner}{objectQualifier}Connect_LPM_Translations tr
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_Texts t ON t.TextId=tr.TextId
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageVersions pv ON pv.PackageVersionId=t.PackageVersionId
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_ResourceFiles rf ON rf.ResourceFileId=t.ResourceFileId
+LEFT JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageVersions pve ON pve.PackageVersionId=t.DeprecatedInVersionId
+LEFT JOIN {databaseOwner}{objectQualifier}Users cu ON cu.UserID=tr.CreatedByUserID
+LEFT JOIN {databaseOwner}{objectQualifier}Users mu ON mu.UserID=tr.LastModifiedByUserID
+GO
+
+/******* SPROCS *******/
+
+/* Add Schedule Job */
+/*************************************/
+IF NOT EXISTS(SELECT 1 FROM {databaseOwner}{objectQualifier}Schedule WHERE TypeFullName = 'Connect.LanguagePackManager.Core.CheckGithubTask, CONNECT.LANGUAGEPACKMANAGER.CORE')
+BEGIN
+	INSERT INTO {databaseOwner}{objectQualifier}Schedule
+	(   [TypeFullName]
+	   ,[TimeLapse]
+	   ,[TimeLapseMeasurement]
+	   ,[RetryTimeLapse]
+	   ,[RetryTimeLapseMeasurement]
+	   ,[RetainHistoryNum]
+	   ,[AttachToEvent]
+	   ,[CatchUpEnabled]
+	   ,[Enabled]
+	   ,[ObjectDependencies]
+	   ,[FriendlyName]
+	) VALUES
+    (	'Connect.LanguagePackManager.Core.CheckGithubTask, CONNECT.LANGUAGEPACKMANAGER.CORE'
+	   ,1
+	   ,N'd'
+	   ,6
+	   ,N'h'
+	   ,10
+	   ,N''
+	   ,0
+	   ,1
+	   ,N''
+	   ,N'LP Manager Check Github'
+	 )
+END
+GO
+
+

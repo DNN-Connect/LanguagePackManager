@@ -1,0 +1,5 @@
+_Development
+.vs
+**/bin
+**/obj
+

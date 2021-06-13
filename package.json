@@ -1,0 +1,56 @@
+{
+  "name": "languagepackmanager",
+  "version": "0.0.1",
+  "description": "DNN Language Pack Manager",
+  "dnn": {
+    "projectFolders": [
+      "Server/LanguagePackManager"
+    ],
+    "owner": {
+      "name": "Peter Donker",
+      "organization": "DNN Connect",
+      "url": "http://dnn-connect.org",
+      "email": "peter@bring2mind.net"
+    },
+    "pathsAndFiles": {
+      "solutionFile": "./Connect.LanguagePackManager.sln",
+      "pathToAssemblies": "./bin",
+      "devSiteUrl": "",
+      "devSitePath": "",
+      "excludeFilter": [
+        "bin/",
+        "obj/",
+        "node_modules"
+      ],
+      "licenseFile": "./License.md",
+      "releaseNotesFile": "",
+      "releaseFiles": [
+        "App_LocalResources/*.resx",
+        "**/*.ascx",
+        "**/*.cshtml",
+        "**/*.vbhtml",
+        "js/*.js",
+        "css/*.css",
+        "*.css",
+        "**/*.html",
+        "**/*.png",
+        "**/*.jpg",
+        "**/*.jpeg",
+        "**/*.gif",
+        "**/*.eot",
+        "**/*.svg",
+        "**/*.ttf",
+        "**/*.woff",
+        "**/*.woff2",
+        "*.txt"
+      ],
+      "zipName": "Connect.LanguagePackManager"
+    }
+  },
+  "scripts": {
+    "build": "set NODE_ENV=production&&webpack --config Client/webpack.config.js",
+    "watch": "webpack --config Client/webpack.config.js --progress --watch",
+    "watch-server": "node watch.js"
+  },
+  "author": "Peter Donker"
+}

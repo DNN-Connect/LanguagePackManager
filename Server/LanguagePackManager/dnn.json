@@ -1,0 +1,52 @@
+{
+  "name": "Connect.LanguagePackManager",
+  "projectType": "module",
+  "friendlyName": "LanguagePack Manager",
+  "description": "DNN Connect LanguagePack Manager Module",
+  "packageName": "Connect_LanguagePackManager",
+  "folder": "MVC/Connect/LanguagePackManager",
+  "iconFile": "DesktopModules\\MVC\\Connect\\LanguagePackManager\\icon.png",
+  "module": {
+    "azureCompatible": "true",
+    "moduleName": "Connect_LanguagePackManager",
+    "foldername": "Connect/LanguagePackManager",
+    "businessControllerClass": "Connect.LanguagePackManager.Presentation.Common.ModuleController, CONNECT.LANGUAGEPACKMANAGER.PRESENTATION",
+    "supportedFeatures": [ "Portable" ],
+    "moduleDefinitions": [
+      {
+        "friendlyName": "DNN Connect LanguagePack Manager",
+        "defaultCacheTime": 0,
+        "moduleControls": [
+          {
+            "controlSrc": "Connect.LanguagePackManager.Presentation.Controllers/Home/Index.mvc",
+            "supportsPartialRendering": "False",
+            "controlTitle": "LanguagePackManager",
+            "controlType": "View",
+            "viewOrder": 0
+          },
+          {
+            "controlKey": "Settings",
+            "controlSrc": "Connect.LanguagePackManager.Presentation.Controllers/Settings/Settings.mvc",
+            "supportsPartialRendering": "False",
+            "controlTitle": "LanguagePackManager Settings",
+            "controlType": "Edit",
+            "viewOrder": 0
+          }
+        ],
+        "permissions": [
+          {
+            "code": "Connect_LPM_MODULE",
+            "key": "TRANSLATOR",
+            "name": "Translator"
+          }
+        ]
+      }
+    ]
+  },
+  "pathsAndFiles": {
+    "pathToAssemblies": "./bin",
+    "pathToScripts": "./Server/SqlScripts",
+    "assemblies": [ "Connect.LanguagePackManager.Presentation.dll" ],
+    "excludeFilter": [ "LanguagePackManager/bin/", "LanguagePackManager/obj/" ]
+  }
+}

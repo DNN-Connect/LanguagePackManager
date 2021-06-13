@@ -1,0 +1,22 @@
+{
+  "generator-dotnetnuke": {
+    "promptValues": {
+      "projectname": "LanguagePackManager",
+      "projectdescription": "DNN Language Pack Manager",
+      "yourname": "Peter Donker",
+      "email": "peter@bring2mind.net",
+      "companyfull": "DNN Connect",
+      "companyshort": "dnnconnect",
+      "companyUrl": "dnn-connect.org",
+      "dnnHost": "http://dnndev.me",
+      "dnnRoot": "http://custom",
+      "namespace": "Connect",
+      "dnnVersion": "9.9.0",
+      "npm": true
+    },
+    "Company": "DNN Connect",
+    "Project": "LanguagePackManager",
+    "Namespace": "Connect.LanguagePackManager",
+    "Solution": "Connect.LanguagePackManager"
+  }
+}
