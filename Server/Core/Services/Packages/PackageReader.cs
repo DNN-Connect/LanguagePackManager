@@ -102,13 +102,13 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
 
             foreach (var resFile in this.UnzipResult.ResourceFiles.Values)
             {
-                this.ProcessResourceFile(packageVersion, package.LastVersion, resFile.FilePathLowered, Path.Combine(this.UnzipResult.UnzipDirectory, resFile.HashedName));
+                this.ProcessResourceFile(packageVersion, package.LastVersion, Globals.DnnPathCombine(this.UnzipResult.BasePath, resFile.FilePathLowered), Path.Combine(this.UnzipResult.UnzipDirectory, resFile.HashedName));
             }
             if (extraFiles != null)
             {
                 foreach (var resFile in extraFiles.ResourceFiles.Values)
                 {
-                    this.ProcessResourceFile(packageVersion, package.LastVersion, resFile.FilePathLowered, Path.Combine(extraFiles.UnzipDirectory, resFile.HashedName));
+                    this.ProcessResourceFile(packageVersion, package.LastVersion, Globals.DnnPathCombine(extraFiles.BasePath, resFile.FilePathLowered), Path.Combine(extraFiles.UnzipDirectory, resFile.HashedName));
                 }
             }
 

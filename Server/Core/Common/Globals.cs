@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Connect.LanguagePackManager.Core.Common
@@ -63,6 +64,17 @@ namespace Connect.LanguagePackManager.Core.Common
                 res = sr.ReadToEnd();
             }
             return res;
+        }
+
+        public static string DnnPathCombine(string path1, params string[] otherPaths)
+        {
+            var paths = new List<string>();
+            paths.Add(path1.Replace("\\", "/").Trim('/').ToLowerInvariant());
+            foreach (var p in otherPaths)
+            {
+                paths.Add(p.Replace("\\", "/").Trim('/').ToLowerInvariant());
+            }
+            return string.Join("/", paths);
         }
     }
 }
