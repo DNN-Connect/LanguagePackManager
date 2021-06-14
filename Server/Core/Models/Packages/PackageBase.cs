@@ -23,8 +23,6 @@ namespace Connect.LanguagePackManager.Core.Models.Packages
         [DataMember]
         public int LinkId { get; set; }
         [DataMember]
-        public int? ContainedIn { get; set; }
-        [DataMember]
         public string PackageName { get; set; }
         [DataMember]
         public string FriendlyName { get; set; }
@@ -44,9 +42,6 @@ namespace Connect.LanguagePackManager.Core.Models.Packages
 
             if (package.LinkId > -1)
                 LinkId = package.LinkId;
-
-            if (package.ContainedIn > -1)
-                ContainedIn = package.ContainedIn;
 
             if (!String.IsNullOrEmpty(package.PackageName))
                 PackageName = package.PackageName;

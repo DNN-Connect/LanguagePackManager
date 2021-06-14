@@ -17,6 +17,7 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
         {
    PackageVersionId = Convert.ToInt32(Null.SetNull(dr["PackageVersionId"], PackageVersionId));
    PackageId = Convert.ToInt32(Null.SetNull(dr["PackageId"], PackageId));
+   ContainedInPackageVersionId = Convert.ToInt32(Null.SetNull(dr["ContainedInPackageVersionId"], ContainedInPackageVersionId));
    Version = Convert.ToString(Null.SetNull(dr["Version"], Version));
    ReleaseDate = (DateTime)(Null.SetNull(dr["ReleaseDate"], ReleaseDate));
    Downloaded = (DateTime)(Null.SetNull(dr["Downloaded"], Downloaded));
@@ -39,6 +40,12 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
      return PackageVersionId.ToString(strFormat, formatProvider);
     case "packageid": // Int
      return PackageId.ToString(strFormat, formatProvider);
+    case "containedinpackageversionid": // Int
+     if (ContainedInPackageVersionId == null)
+     {
+         return "";
+     };
+     return ((int)ContainedInPackageVersionId).ToString(strFormat, formatProvider);
     case "version": // VarChar
      return PropertyAccess.FormatString(Version, strFormat);
     case "releasedate": // DateTime

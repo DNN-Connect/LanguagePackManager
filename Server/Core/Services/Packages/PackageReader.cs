@@ -13,17 +13,17 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
     public class PackageReader
     {
         public int PackageLinkId { get; set; }
-        public int ParentPackageId { get; set; }
+        public int ParentPackageVersionId { get; set; }
         private UnzipResult UnzipResult { get; set; }
         public bool IsInError { get; set; } = false;
         public string ErrorMessage { get; set; } = "";
         public bool IsCore { get; set; } = false;
         public Manifest Manifest { get; set; } = null;
 
-        public PackageReader(int packageLinkId, int parentPackageId, string zipFilePath)
+        public PackageReader(int packageLinkId, int parentPackageVersionId, string zipFilePath)
         {
             this.PackageLinkId = packageLinkId;
-            this.ParentPackageId = parentPackageId;
+            this.ParentPackageVersionId = parentPackageVersionId;
 
             //Globals.CleanupTempDirs(homeDirectoryMapPath + "LocalizationEditor");
 
@@ -97,10 +97,6 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                     PackageName = packageName,
                     PackageType = packageType
                 };
-                if (this.ParentPackageId != -1)
-                {
-                    package.ContainedIn = this.ParentPackageId;
-                }
                 package.PackageId = PackageRepository.Instance.AddPackage(package.GetPackageBase()).PackageId;
             }
 
@@ -114,6 +110,10 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                     ReleaseDate = releaseDate,
                     Downloaded = DateTime.Now
                 };
+                if (this.ParentPackageVersionId != -1)
+                {
+                    packageVersion.ContainedInPackageVersionId = this.ParentPackageVersionId;
+                }
                 packageVersion.PackageVersionId = PackageVersionRepository.Instance.AddPackageVersion(packageVersion.GetPackageVersionBase()).PackageVersionId;
             }
 
@@ -136,7 +136,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
             package.LastChecked = DateTime.Now;
             PackageRepository.Instance.UpdatePackage(package.GetPackageBase());
 
-            return package.PackageId;
+            return packageVersion.PackageVersionId;
         }
 
         private void ProcessResourceFile(PackageVersion packageVersion, string highestVersion, string fileKey, string filePath)

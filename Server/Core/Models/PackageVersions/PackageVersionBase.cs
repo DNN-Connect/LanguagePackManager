@@ -23,6 +23,8 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
         [DataMember]
         public int PackageId { get; set; }
         [DataMember]
+        public int? ContainedInPackageVersionId { get; set; }
+        [DataMember]
         public string Version { get; set; }
         [DataMember]
         public DateTime ReleaseDate { get; set; }
@@ -38,6 +40,9 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
 
             if (packageVersion.PackageId > -1)
                 PackageId = packageVersion.PackageId;
+
+            if (packageVersion.ContainedInPackageVersionId > -1)
+                ContainedInPackageVersionId = packageVersion.ContainedInPackageVersionId;
 
             if (!String.IsNullOrEmpty(packageVersion.Version))
                 Version = packageVersion.Version;

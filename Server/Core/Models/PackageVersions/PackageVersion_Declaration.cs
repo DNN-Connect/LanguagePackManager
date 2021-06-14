@@ -34,6 +34,7 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
             PackageVersionBase res = new PackageVersionBase();
              res.PackageVersionId = PackageVersionId;
              res.PackageId = PackageId;
+             res.ContainedInPackageVersionId = ContainedInPackageVersionId;
              res.Version = Version;
              res.ReleaseDate = ReleaseDate;
              res.Downloaded = Downloaded;
@@ -44,6 +45,7 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
             PackageVersion res = new PackageVersion();
             res.PackageVersionId = PackageVersionId;
             res.PackageId = PackageId;
+            res.ContainedInPackageVersionId = ContainedInPackageVersionId;
             res.Version = Version;
             res.ReleaseDate = ReleaseDate;
             res.Downloaded = Downloaded;

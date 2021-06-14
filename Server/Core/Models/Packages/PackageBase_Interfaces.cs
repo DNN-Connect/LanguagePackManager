@@ -17,7 +17,6 @@ namespace Connect.LanguagePackManager.Core.Models.Packages
         {
    PackageId = Convert.ToInt32(Null.SetNull(dr["PackageId"], PackageId));
    LinkId = Convert.ToInt32(Null.SetNull(dr["LinkId"], LinkId));
-   ContainedIn = Convert.ToInt32(Null.SetNull(dr["ContainedIn"], ContainedIn));
    PackageName = Convert.ToString(Null.SetNull(dr["PackageName"], PackageName));
    FriendlyName = Convert.ToString(Null.SetNull(dr["FriendlyName"], FriendlyName));
    PackageType = Convert.ToString(Null.SetNull(dr["PackageType"], PackageType));
@@ -42,12 +41,6 @@ namespace Connect.LanguagePackManager.Core.Models.Packages
      return PackageId.ToString(strFormat, formatProvider);
     case "linkid": // Int
      return LinkId.ToString(strFormat, formatProvider);
-    case "containedin": // Int
-     if (ContainedIn == null)
-     {
-         return "";
-     };
-     return ((int)ContainedIn).ToString(strFormat, formatProvider);
     case "packagename": // NVarChar
      return PropertyAccess.FormatString(PackageName, strFormat);
     case "friendlyname": // NVarChar

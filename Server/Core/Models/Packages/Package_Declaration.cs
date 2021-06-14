@@ -30,7 +30,6 @@ namespace Connect.LanguagePackManager.Core.Models.Packages
             PackageBase res = new PackageBase();
              res.PackageId = PackageId;
              res.LinkId = LinkId;
-             res.ContainedIn = ContainedIn;
              res.PackageName = PackageName;
              res.FriendlyName = FriendlyName;
              res.PackageType = PackageType;
@@ -43,7 +42,6 @@ namespace Connect.LanguagePackManager.Core.Models.Packages
             Package res = new Package();
             res.PackageId = PackageId;
             res.LinkId = LinkId;
-            res.ContainedIn = ContainedIn;
             res.PackageName = PackageName;
             res.FriendlyName = FriendlyName;
             res.PackageType = PackageType;

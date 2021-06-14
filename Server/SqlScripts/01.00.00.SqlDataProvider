@@ -33,7 +33,6 @@ BEGIN
 CREATE TABLE {databaseOwner}{objectQualifier}Connect_LPM_Packages(
  [PackageId] [int] IDENTITY(1,1) NOT NULL,
  [LinkId] [int] NOT NULL,
- [ContainedIn] [int] NULL,
  [PackageName] [nvarchar](128) NOT NULL,
  [FriendlyName] [nvarchar](250) NOT NULL,
  [PackageType] [nvarchar](100) NOT NULL,
@@ -55,6 +54,7 @@ BEGIN
 CREATE TABLE {databaseOwner}{objectQualifier}Connect_LPM_PackageVersions(
  [PackageVersionId] [int] IDENTITY(1,1) NOT NULL,
  [PackageId] [int] NOT NULL,
+ [ContainedInPackageVersionId] [int] NULL,
  [Version] [varchar](15) NOT NULL,
  [ReleaseDate] [datetime] NOT NULL,
  [Downloaded] [datetime] NOT NULL,
