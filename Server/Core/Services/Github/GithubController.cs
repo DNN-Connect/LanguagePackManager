@@ -13,11 +13,11 @@ namespace Connect.LanguagePackManager.Core.Services.Github
     {
         public static void CheckPackage(PackageLink package)
         {
-            var baseVersion = string.IsNullOrEmpty(package.LastDownloadedVersion) ? new Version(0, 0, 0) : new Version(package.LastDownloadedVersion);
+            var baseVersion = string.IsNullOrEmpty(package.LastDownloadedVersion) ? "00.00.00" : package.LastDownloadedVersion;
             var githubVersions = GithubService.GetReleases(package.OrgName, package.RepoName)
                 .Where(gp => gp.Draft == false
                             && gp.Prerelease == false
-                            && (string.IsNullOrEmpty(package.LastDownloadedVersion) || baseVersion.CompareTo(gp.TagName.ParseVersion()) < 0))
+                            && (string.IsNullOrEmpty(package.LastDownloadedVersion) || baseVersion.IsSmallerThan(gp.TagName.ParseVersion().ToNormalizedFormat())))
                 .OrderBy(p => p.Published);
             foreach (var githubVersion in githubVersions)
             {
@@ -26,7 +26,7 @@ namespace Connect.LanguagePackManager.Core.Services.Github
                     var m = Regex.Match(download.Name, package.AssetRegex);
                     if (m.Success)
                     {
-                        var result = GetGithubPackage(package, download.DownloadUrl);
+                        var result = GetGithubPackage(download.DownloadUrl);
                         if (!string.IsNullOrEmpty(result))
                         {
                             package.LastDownloadedVersion = githubVersion.TagName.ParseVersion().ToNormalizedFormat();
@@ -42,10 +42,11 @@ namespace Connect.LanguagePackManager.Core.Services.Github
             }
         }
 
-        public static string GetGithubPackage(PackageLink link, string url)
+        public static string GetGithubPackage(string url)
         {
             var fileToDownload = url.Substring(url.LastIndexOf('/') + 1);
-            var fileToSave = Path.Combine(Common.Globals.GetTempFolder(), fileToDownload);
+            var fileToSave = Path.Combine(Globals.GetTempFolder(), fileToDownload);
+            if (File.Exists(fileToSave)) return fileToSave;
             if (GithubService.DownloadFile(url, fileToSave))
             {
                 return fileToSave;

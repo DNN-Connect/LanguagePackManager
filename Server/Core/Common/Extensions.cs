@@ -1,5 +1,7 @@
 ﻿using Connect.LanguagePackManager.Core.Models.Texts;
 using System;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Connect.LanguagePackManager.Core.Common
@@ -34,6 +36,7 @@ namespace Connect.LanguagePackManager.Core.Common
         {
             return input.CompareTo(compareString) < 0;
         }
+
         public static bool IsBiggerThan(this string input, string compareString)
         {
             return input.CompareTo(compareString) > 0;
@@ -48,6 +51,12 @@ namespace Connect.LanguagePackManager.Core.Common
             }
 
             return res;
+        }
+
+        public static string ToMD5Hash(this string input)
+        {
+            var c = new MD5CryptoServiceProvider();
+            return BitConverter.ToString(c.ComputeHash(Encoding.UTF8.GetBytes(input)));
         }
     }
 }

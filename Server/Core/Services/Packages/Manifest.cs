@@ -10,11 +10,11 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
     public class Manifest : XmlDocument
     {
         public int ManifestVersion { get; set; } = 0;
-        public List<ManifestPackage> Packages { get; set; }
+        public List<ManifestPackage> Packages { get; set; } = new List<ManifestPackage>();
 
-        public Manifest(string filePath, string tempDirectory)
+        public Manifest(UnzipResult unzipResult)
         {
-            this.Load(filePath);
+            this.Load(Path.Combine(unzipResult.UnzipDirectory, unzipResult.ManifestFile));
 
             var mainNodes = this.SelectNodes("dotnetnuke/packages/package");
             if (mainNodes.Count > 0)
@@ -35,7 +35,6 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                 // Remark about DNN 5 manifest file: it is assumed that only one <desktopModule> node per <package> node exists.
 
                 // Create a module for each package
-                var resourceFileCounter = 0;
                 foreach (XmlNode packageNode in mainNodes)
                 {
                     var manifestModule = new ManifestPackage();
@@ -72,7 +71,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                                         basePath = fileGroupNode["basePath"].InnerText.Replace('/', '\\').Trim('\\');
                                     }
 
-                                    manifestModule.ParseFileNode(fileGroupNode, basePath, tempDirectory);
+                                    manifestModule.ParseFileNode(fileGroupNode, basePath);
                                 }
 
                                 break;
@@ -89,7 +88,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                                     {
                                         basePath = fileGroupNode["basePath"].InnerText.Replace('/', '\\').Trim('\\');
                                     }
-                                    manifestModule.ParseFileNode(fileGroupNode, basePath, tempDirectory);
+                                    manifestModule.ParseFileNode(fileGroupNode, basePath);
                                 }
 
                                 break;
@@ -106,7 +105,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                                     {
                                         basePath = fileGroupNode["basePath"].InnerText.Replace('/', '\\').Trim('\\');
                                     }
-                                    manifestModule.ParseFileNode(fileGroupNode, basePath, tempDirectory);
+                                    manifestModule.ParseFileNode(fileGroupNode, basePath);
                                 }
 
                                 break;
@@ -121,7 +120,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                                     {
                                         basePath = fileGroupNode["basePath"].InnerText.Replace('/', '\\').Trim('\\');
                                     }
-                                    manifestModule.ParseFileNode(fileGroupNode, basePath, tempDirectory);
+                                    manifestModule.ParseFileNode(fileGroupNode, basePath);
                                 }
 
                                 break;
@@ -132,10 +131,16 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                     foreach (XmlNode resFileNode in packageNode.SelectNodes("components/component[@type='ResourceFile']"))
                     {
                         string basePath = resFileNode.SelectSingleNode("resourceFiles/basePath").InnerText.Replace('/', '\\').Trim('\\');
-                        string resFile = resFileNode.SelectSingleNode("resourceFiles/resourceFile/name").InnerText;
-                        ZipHelper.Unzip(tempDirectory.EnsureEndsWith(@"\") + resFile, tempDirectory + @"\ResourceFiles" + resourceFileCounter.ToString());
-                        manifestModule.ReadResourceFile(basePath, tempDirectory + @"\ResourceFiles" + resourceFileCounter.ToString());
-                        resourceFileCounter += 1;
+                        string resFile = resFileNode.SelectSingleNode("resourceFiles/resourceFile/name").InnerText.ToLowerInvariant();
+
+                        // find the zip file
+                        foreach (var zipFile in unzipResult.ZipFiles.Values)
+                        {
+                            if (zipFile.FilePathLowered == resFile)
+                            {
+                                manifestModule.ResourcesFile = ZipHelper.Unzip(Path.Combine(unzipResult.UnzipDirectory, zipFile.HashedName), basePath);
+                            }
+                        }
                     }
 
                     // Add the manifest module to the collection
@@ -198,9 +203,9 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                         if (resFile.ToLower().EndsWith("ascx.resx") || resFile.ToLower().EndsWith("aspx.resx"))
                         {
                             // Determine the resource directory and key for the module
-                            string resPath = Path.Combine(Path.Combine(tempDirectory, resDir), resFile);
-                            string resKey = Path.Combine(Path.Combine(Path.Combine("DesktopModules", manifestModule.FolderName), resDir), resFile);
-                            manifestModule.ResourceFiles.Add(resKey, new FileInfo(resPath));
+                            string resPath = resDir + resFile;
+                            string resKey = Path.Combine("DesktopModules", manifestModule.FolderName, resDir, resFile);
+                            manifestModule.ListedResourceFiles.Add(resKey, resPath);
                         }
                     }
 
@@ -208,9 +213,16 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                     if (folderNode["resourcefile"] is object)
                     {
                         string basePath = @"DesktopModules\" + manifestModule.FolderName;
-                        string resFile = folderNode["resourcefile"].InnerText;
-                        ZipHelper.Unzip(tempDirectory + @"\" + resFile, tempDirectory + @"\ResourceFiles");
-                        manifestModule.ReadResourceFile(basePath, tempDirectory + @"\ResourceFiles");
+                        string resFile = folderNode["resourcefile"].InnerText.ToLowerInvariant();
+
+                        // find the zip file
+                        foreach (var zipFile in unzipResult.ZipFiles.Values)
+                        {
+                            if (zipFile.FilePathLowered == resFile)
+                            {
+                                manifestModule.ResourcesFile = ZipHelper.Unzip(Path.Combine(unzipResult.UnzipDirectory, zipFile.HashedName), basePath);
+                            }
+                        }
                     }
 
                     // Add the manifest module to the collection

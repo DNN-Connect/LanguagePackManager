@@ -4,53 +4,33 @@ using Connect.LanguagePackManager.Core.Models.Packages;
 using Connect.LanguagePackManager.Core.Models.PackageVersions;
 using Connect.LanguagePackManager.Core.Repositories;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Connect.LanguagePackManager.Core.Services.Packages
 {
     public class PackageReader
     {
         public int PackageLinkId { get; set; }
-        private string WorkingDirectory { get; set; }
-        private string[] DnnFiles { get; set; }
+        private UnzipResult UnzipResult { get; set; }
         public bool IsInError { get; set; } = false;
         public string ErrorMessage { get; set; } = "";
         public bool IsCore { get; set; } = false;
         public Manifest Manifest { get; set; } = null;
-        private SortedList CoreResourceFiles { get; set; } = new SortedList();
 
         public PackageReader(int packageLinkId, string zipFilePath)
         {
             this.PackageLinkId = packageLinkId;
 
-            // Create a temporary directory to unpack the package
-            this.WorkingDirectory = Path.Combine(Globals.GetTempFolder(), @"LocalizationEditor\~tmp" + DateTime.Now.ToString("yyyyMMdd-hhmmss"));
-
             //Globals.CleanupTempDirs(homeDirectoryMapPath + "LocalizationEditor");
 
             // Unzip file contents
-            ZipHelper.Unzip(zipFilePath, WorkingDirectory);
+            this.UnzipResult = ZipHelper.Unzip(zipFilePath, "");
 
-            // Find the DNN manifest file
-            // Multiple manifests are allowed (.dnn and .dnn5 etc) so we look for the highest
-            this.DnnFiles = Directory.GetFiles(WorkingDirectory, "*.dnn6");
-            if (DnnFiles.Length == 0)
+            if (string.IsNullOrEmpty(UnzipResult.ManifestFile))
             {
-                DnnFiles = Directory.GetFiles(WorkingDirectory, "*.dnn5");
-            }
-
-            if (DnnFiles.Length == 0)
-            {
-                DnnFiles = Directory.GetFiles(WorkingDirectory, "*.dnn");
-            }
-
-            if (DnnFiles.Length == 0)
-            {
-                if (Directory.GetFiles(WorkingDirectory, "Default.aspx").Length == 0)
+                if (!File.Exists(Path.Combine(this.UnzipResult.UnzipDirectory, "bin", "DotNetNuke.dll")))
                 {
                     this.ErrorMessage = "No DNN Manifest file found, nor a core distribution";
                     this.IsInError = true;
@@ -62,7 +42,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
             }
             else
             {
-                this.Manifest = new Manifest(DnnFiles[0], this.WorkingDirectory);
+                this.Manifest = new Manifest(this.UnzipResult);
             }
         }
 
@@ -70,27 +50,25 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
         {
             if (this.IsCore)
             {
-                this.FindResourceFiles(new DirectoryInfo(WorkingDirectory), "");
-                var version = Globals.GetAssemblyVersion(Path.Combine(WorkingDirectory, @"\bin\DotNetNuke.dll"));
-                this.ProcessPackage(Globals.glbCoreName, "", Globals.glbCoreName, Globals.glbCoreFriendlyName, version, releaseDate, CoreResourceFiles);
+                this.ProcessPackage(Globals.glbCoreName, "", Globals.glbCoreName, Globals.glbCoreFriendlyName, this.UnzipResult.DnnVersion, releaseDate);
             }
             else
             {
                 foreach (var p in this.Manifest.Packages)
                 {
-                    this.ProcessPackage(p.PackageName, p.FolderName, p.PackageType, p.FriendlyName, p.PackageVersion, releaseDate, p.ResourceFiles);
+                    this.ProcessPackage(p.PackageName, p.FolderName, p.PackageType, p.FriendlyName, p.PackageVersion, releaseDate, p.ResourcesFile);
                 }
             }
             try
             {
-                Directory.Delete(this.WorkingDirectory, true);
+                Directory.Delete(this.UnzipResult.UnzipDirectory, true);
             }
             catch (Exception ex)
             {
             }
         }
 
-        private void ProcessPackage(string packageName, string folderName, string packageType, string friendlyName, Version pVersion, DateTime releaseDate, SortedList resourceFiles)
+        private void ProcessPackage(string packageName, string folderName, string packageType, string friendlyName, Version pVersion, DateTime releaseDate, UnzipResult extraFiles = null)
         {
             var version = pVersion.ToNormalizedFormat();
             var package = PackageRepository.Instance.FindPackage(this.PackageLinkId, packageName);
@@ -122,9 +100,16 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                 packageVersion.PackageVersionId = PackageVersionRepository.Instance.AddPackageVersion(packageVersion.GetPackageVersionBase()).PackageVersionId;
             }
 
-            foreach (var resKey in resourceFiles.Keys)
+            foreach (var resFile in this.UnzipResult.ResourceFiles.Values)
             {
-                this.ProcessResourceFile(packageVersion, package.LastVersion, (string)resKey, (string)resourceFiles[resKey]);
+                this.ProcessResourceFile(packageVersion, package.LastVersion, resFile.FilePathLowered, Path.Combine(this.UnzipResult.UnzipDirectory, resFile.HashedName));
+            }
+            if (extraFiles != null)
+            {
+                foreach (var resFile in extraFiles.ResourceFiles.Values)
+                {
+                    this.ProcessResourceFile(packageVersion, package.LastVersion, resFile.FilePathLowered, Path.Combine(extraFiles.UnzipDirectory, resFile.HashedName));
+                }
             }
 
             if (package.LastVersion.ParseVersion().CompareTo(pVersion) < 0)
@@ -133,24 +118,6 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
             }
             package.LastChecked = DateTime.Now;
             PackageRepository.Instance.UpdatePackage(package.GetPackageBase());
-        }
-
-        private void FindResourceFiles(DirectoryInfo dir, string basePath)
-        {
-            foreach (FileInfo f in dir.GetFiles("*.resx"))
-            {
-                var m = Regex.Match(f.Name, @"\.(\w{2,3}-\w\w)\.");
-                if (!m.Success || m.Groups[1].Value.ToLower() == "en-us") // filter out all files that are not default locale
-                {
-                    string resKey = Path.Combine(basePath, f.Name);
-                    this.CoreResourceFiles.Add(resKey, f);
-                }
-            }
-
-            foreach (var d in dir.GetDirectories())
-            {
-                this.FindResourceFiles(d, basePath + d.Name + "/");
-            }
         }
 
         private void ProcessResourceFile(PackageVersion packageVersion, string highestVersion, string fileKey, string filePath)

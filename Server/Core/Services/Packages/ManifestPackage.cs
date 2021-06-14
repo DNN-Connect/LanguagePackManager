@@ -1,6 +1,9 @@
 ﻿using Connect.LanguagePackManager.Core.Common;
+using Connect.LanguagePackManager.Core.Helpers;
+using Connect.LanguagePackManager.Core.Services.ResourceFiles;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -14,9 +17,10 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
         public string PackageType { get; set; }
         public string FriendlyName { get; set; }
         public string FolderName { get; set; }
-        public SortedList ResourceFiles { get; set; } = new SortedList();
+        public Dictionary<string, string> ListedResourceFiles { get; set; } = new Dictionary<string, string>();
+        public UnzipResult ResourcesFile { get; set; }
 
-        public void ParseFileNode(XmlNode fileNode, string basePath, string tempDirectory)
+        public void ParseFileNode(XmlNode fileNode, string basePath)
         {
             foreach (XmlNode node in fileNode.SelectNodes("file"))
             {
@@ -28,37 +32,13 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                     resDir = node["path"].InnerText;
                 if (resFile.ToLower().EndsWith(".resx"))
                 {
-                    string resPath = Path.Combine(Path.Combine(tempDirectory, resDir), resFile);
+                    string resPath = resDir + resFile;
                     if (node["sourceFileName"] is object)
-                        resPath = Path.Combine(Path.Combine(tempDirectory, resDir), node["sourceFileName"].InnerText);
-                    string resKey = Path.Combine(Path.Combine(basePath, resDir), resFile);
-                    this.ResourceFiles.Add(resKey, new FileInfo(resPath));
+                        resPath = resDir + node["sourceFileName"].InnerText;
+                    string resKey = basePath + resDir + resFile;
+                    this.ListedResourceFiles.Add(resKey, resPath);
                 }
             }
         }
-
-        public void ReadResourceFile(string keyBasePath, string path)
-        {
-            if (!string.IsNullOrEmpty(keyBasePath))
-            {
-                keyBasePath.EnsureEndsWith(@"\");
-            }
-
-            foreach (FileInfo f in new DirectoryInfo(path).GetFiles("*.resx"))
-            {
-                if (this.ResourceFiles[keyBasePath + f.Name] is null)
-                {
-                    var m = Regex.Match(f.Name, @"\.(\w{2,3}-\w\w)\.");
-                    if (!m.Success || m.Groups[1].Value.ToLower() == "en-us") // filter out all files that are not default locale
-                    {
-                        this.ResourceFiles.Add(keyBasePath + f.Name, f);
-                    }
-                }
-            }
-
-            foreach (string d in Directory.GetDirectories(path))
-                this.ReadResourceFile(keyBasePath + d.Substring(d.LastIndexOf(@"\") + 2), d);
-        }
-
     }
 }
