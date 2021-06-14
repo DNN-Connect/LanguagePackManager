@@ -31,7 +31,7 @@ namespace Connect.LanguagePackManager.Core.Services.Github
                         {
                             package.LastDownloadedVersion = githubVersion.TagName.ParseVersion().ToNormalizedFormat();
                             PackageLinkRepository.Instance.UpdatePackageLink(package.GetPackageLinkBase(), -1);
-                            var reader = new PackageReader(package.PackageLinkId, result);
+                            var reader = new PackageReader(package.PackageLinkId, -1, result);
                             if (!reader.IsInError)
                             {
                                 reader.Process(githubVersion.Published);

@@ -13,15 +13,17 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
     public class PackageReader
     {
         public int PackageLinkId { get; set; }
+        public int ParentPackageId { get; set; }
         private UnzipResult UnzipResult { get; set; }
         public bool IsInError { get; set; } = false;
         public string ErrorMessage { get; set; } = "";
         public bool IsCore { get; set; } = false;
         public Manifest Manifest { get; set; } = null;
 
-        public PackageReader(int packageLinkId, string zipFilePath)
+        public PackageReader(int packageLinkId, int parentPackageId, string zipFilePath)
         {
             this.PackageLinkId = packageLinkId;
+            this.ParentPackageId = parentPackageId;
 
             //Globals.CleanupTempDirs(homeDirectoryMapPath + "LocalizationEditor");
 
@@ -50,7 +52,18 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
         {
             if (this.IsCore)
             {
-                this.ProcessPackage(Globals.glbCoreName, "", Globals.glbCoreName, Globals.glbCoreFriendlyName, this.UnzipResult.DnnVersion, releaseDate);
+                var coreId = this.ProcessPackage(Globals.glbCoreName, "", Globals.glbCoreName, Globals.glbCoreFriendlyName, this.UnzipResult.DnnVersion, releaseDate);
+                foreach (var zipFile in this.UnzipResult.ZipFiles.Values)
+                {
+                    if (zipFile.FilePathLowered.StartsWith("install"))
+                    {
+                        var rdr = new PackageReader(this.PackageLinkId, coreId, Path.Combine(this.UnzipResult.UnzipDirectory, zipFile.HashedName));
+                        if (!rdr.IsInError)
+                        {
+                            rdr.Process(releaseDate);
+                        }
+                    }
+                }
             }
             else
             {
@@ -68,7 +81,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
             }
         }
 
-        private void ProcessPackage(string packageName, string folderName, string packageType, string friendlyName, Version pVersion, DateTime releaseDate, UnzipResult extraFiles = null)
+        private int ProcessPackage(string packageName, string folderName, string packageType, string friendlyName, Version pVersion, DateTime releaseDate, UnzipResult extraFiles = null)
         {
             var version = pVersion.ToNormalizedFormat();
             var package = PackageRepository.Instance.FindPackage(this.PackageLinkId, packageName);
@@ -84,6 +97,10 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                     PackageName = packageName,
                     PackageType = packageType
                 };
+                if (this.ParentPackageId != -1)
+                {
+                    package.ContainedIn = this.ParentPackageId;
+                }
                 package.PackageId = PackageRepository.Instance.AddPackage(package.GetPackageBase()).PackageId;
             }
 
@@ -118,6 +135,8 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
             }
             package.LastChecked = DateTime.Now;
             PackageRepository.Instance.UpdatePackage(package.GetPackageBase());
+
+            return package.PackageId;
         }
 
         private void ProcessResourceFile(PackageVersion packageVersion, string highestVersion, string fileKey, string filePath)
