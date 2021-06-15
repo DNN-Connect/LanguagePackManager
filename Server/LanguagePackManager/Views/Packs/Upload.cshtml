@@ -1,0 +1,25 @@
+@inherits LanguagePackManagerWebPage
+@using Connect.LanguagePackManager.Presentation.Common
+@{
+  LanguagePackManagerModuleContext.AddModuleScript();
+}
+
+<h1>Upload</h1>
+
+<table class="table">
+  <tbody>
+    <tr>
+      <th>@Dnn.LocalizeString("Package")</th>
+      <td><input type="file" name="Package" id="Package" required /> </td>
+    </tr>
+    <tr>
+      <th>@Dnn.LocalizeString("GenericLanguage")</th>
+      <td><input type="checkbox" name="GenericLanguage" id="GenericLanguage" checked /></td>
+    </tr>
+  </tbody>
+</table>
+
+<div>
+  <a href="@Url.Action("Index", "Home")" class="dnnSecondaryAction">@Dnn.LocalizeString("Cancel")</a>
+  <button value="submit" class="dnnPrimaryAction">@Dnn.LocalizeString("Save")</button>
+</div>

@@ -7,7 +7,7 @@ namespace Connect.LanguagePackManager.Core.Helpers
 {
     public class ZipHelper
     {
-        public static UnzipResult Unzip(Stream fileStream, string packageBasePath)
+        public static UnzipResult Unzip(Stream fileStream, string packageBasePath, bool allowTranslations)
         {
             var result = new UnzipResult(packageBasePath);
             using (var objZipInputStream = new ZipArchive(fileStream, ZipArchiveMode.Read))
@@ -27,12 +27,19 @@ namespace Connect.LanguagePackManager.Core.Helpers
                             {
                                 entry.ExtractToFile(Path.Combine(result.UnzipDirectory, entry.Name), true);
                                 result.DnnVersion = Globals.GetAssemblyVersion(Path.Combine(result.UnzipDirectory, "bin", entry.Name));
+                                try
+                                {
+                                    File.Delete(Path.Combine(result.UnzipDirectory, entry.Name));
+                                }
+                                catch
+                                {
+                                }
                             }
                             break;
                         case ".resx":
                             var fileName = fullName.ToMD5Hash();
                             var m = Regex.Match(entry.Name, @"\.(\w{2,3}-\w\w)\.");
-                            if (!m.Success || m.Groups[1].Value.ToLower() == "en-us") // filter out all files that are not default locale
+                            if (allowTranslations || !m.Success || m.Groups[1].Value.ToLower() == "en-us") // filter out all files that are not default locale
                             {
                                 entry.ExtractToFile(Path.Combine(result.UnzipDirectory, fileName));
                                 result.AddResourceFile(fullName, fileName);
@@ -50,11 +57,11 @@ namespace Connect.LanguagePackManager.Core.Helpers
             return result;
         }
 
-        public static UnzipResult Unzip(string filePath, string packageBasePath)
+        public static UnzipResult Unzip(string filePath, string packageBasePath, bool allowTranslations)
         {
             using (var fileStrm = File.Open(filePath, FileMode.Open, FileAccess.Read))
             {
-                return Unzip(fileStrm, packageBasePath);
+                return Unzip(fileStrm, packageBasePath, allowTranslations);
             }
         }
     }

@@ -15,10 +15,21 @@ namespace Connect.LanguagePackManager.Core.Repositories
                     packageLinkId, packageName);
             }
         }
+
+        public Package FindPackage(string packageName, int moduleId)
+        {
+            using (var context = DataContext.Instance())
+            {
+                return context.ExecuteSingleOrDefault<Package>(System.Data.CommandType.Text,
+                    "SELECT TOP 1 * FROM {databaseOwner}{objectQualifier}vw_Connect_LPM_Packages WHERE ModuleId=@0 AND PackageName=@1",
+                    moduleId, packageName);
+            }
+        }
     }
     public partial interface IPackageRepository
     {
         Package FindPackage(int packageLinkId, string packageName);
+        Package FindPackage(string packageName, int moduleId);
     }
 }
 

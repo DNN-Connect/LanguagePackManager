@@ -208,7 +208,8 @@ AS
 SELECT
  p.*,
  pl.Name,
- pl.LastChecked
+ pl.LastChecked,
+ pl.ModuleId
 FROM {databaseOwner}{objectQualifier}Connect_LPM_Packages p
 INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageLinks pl ON p.LinkId=p.LinkId
 GO
@@ -284,6 +285,42 @@ LEFT JOIN {databaseOwner}{objectQualifier}Users mu ON mu.UserID=tr.LastModifiedB
 GO
 
 /******* SPROCS *******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_SetTranslation') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}Connect_LPM_SetTranslation
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}Connect_LPM_SetTranslation
+ @TextId INT,
+ @Locale NVARCHAR(10),
+ @TextValue NVARCHAR(MAX),
+ @UserId INT
+AS
+IF EXISTS (SELECT * FROM {databaseOwner}{objectQualifier}Connect_LPM_Translations WHERE TextId=@TextId AND Locale=@Locale)
+BEGIN
+ IF NOT EXISTS (SELECT * FROM {databaseOwner}{objectQualifier}Connect_LPM_Translations WHERE TextId=@TextId AND Locale=@Locale AND TextValue=@TextValue)
+  UPDATE {databaseOwner}{objectQualifier}Connect_LPM_Translations
+  SET TextValue=@TextValue, LastModifiedByUserID=@UserId, LastModifiedOnDate=GETDATE()
+  WHERE TextId=@TextId AND Locale=@Locale
+END
+ELSE
+BEGIN
+INSERT INTO {databaseOwner}{objectQualifier}Connect_LPM_Translations
+    ([TextId]
+    ,[Locale]
+    ,[TextValue]
+    ,[CreatedByUserID]
+    ,[CreatedOnDate]
+    ,[LastModifiedByUserID]
+    ,[LastModifiedOnDate])
+VALUES
+ (@TextId, @Locale, @TextValue, @UserId, GETDATE(), @UserId, GETDATE())
+END
+GO
+
 
 /* Add Schedule Job */
 /*************************************/

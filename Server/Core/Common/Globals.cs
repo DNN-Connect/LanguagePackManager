@@ -74,7 +74,7 @@ namespace Connect.LanguagePackManager.Core.Common
             {
                 paths.Add(p.Replace("\\", "/").Trim('/').ToLowerInvariant());
             }
-            return string.Join("/", paths);
+            return string.Join("/", paths).Trim('/');
         }
     }
 }

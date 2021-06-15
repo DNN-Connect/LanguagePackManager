@@ -138,7 +138,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                         {
                             if (zipFile.FilePathLowered == resFile)
                             {
-                                manifestModule.ResourcesFile = ZipHelper.Unzip(Path.Combine(unzipResult.UnzipDirectory, zipFile.HashedName), basePath);
+                                manifestModule.ResourcesFile = ZipHelper.Unzip(Path.Combine(unzipResult.UnzipDirectory, zipFile.HashedName), basePath, false);
                             }
                         }
                     }
@@ -222,7 +222,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                             {
                                 try
                                 {
-                                    manifestModule.ResourcesFile = ZipHelper.Unzip(Path.Combine(unzipResult.UnzipDirectory, zipFile.HashedName), basePath);
+                                    manifestModule.ResourcesFile = ZipHelper.Unzip(Path.Combine(unzipResult.UnzipDirectory, zipFile.HashedName), basePath, false);
                                 }
                                 catch (Exception ex) 
                                 {

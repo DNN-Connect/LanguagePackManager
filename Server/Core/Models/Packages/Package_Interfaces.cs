@@ -18,6 +18,7 @@ namespace Connect.LanguagePackManager.Core.Models.Packages
    base.Fill(dr);
    Name = Convert.ToString(Null.SetNull(dr["Name"], Name));
    LastChecked = (DateTime)(Null.SetNull(dr["LastChecked"], LastChecked));
+   ModuleId = Convert.ToInt32(Null.SetNull(dr["ModuleId"], ModuleId));
   }
   #endregion
 
@@ -33,6 +34,8 @@ namespace Connect.LanguagePackManager.Core.Models.Packages
          return "";
      };
      return ((DateTime)LastChecked).ToString(strFormat, formatProvider);
+    case "moduleid": // Int
+     return ModuleId.ToString(strFormat, formatProvider);
     default:
        return base.GetProperty(strPropertyName, strFormat, formatProvider, accessingUser, accessLevel, ref propertyNotFound);
    }

@@ -1,4 +1,8 @@
 /******* SPROCS *******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_SetTranslation') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}Connect_LPM_SetTranslation
+GO
+
 /******* VIEWS AND FUNCTIONS *******/
 IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_PackageLinks'))
 DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageLinks
@@ -70,7 +74,6 @@ GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_Translations') AND type in (N'U'))
 DROP TABLE {databaseOwner}{objectQualifier}Connect_LPM_Translations
 GO
-
 
 /******* Scheduler *******/
 DELETE FROM {databaseOwner}{objectQualifier}Schedule WHERE TypeFullName = 'Connect.LanguagePackManager.Core.CheckGithubTask, CONNECT.LANGUAGEPACKMANAGER.CORE'

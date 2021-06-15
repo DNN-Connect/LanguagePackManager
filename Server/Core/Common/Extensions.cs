@@ -58,5 +58,10 @@ namespace Connect.LanguagePackManager.Core.Common
             var c = new MD5CryptoServiceProvider();
             return BitConverter.ToString(c.ComputeHash(Encoding.UTF8.GetBytes(input)));
         }
+
+        public static bool OnOffToBool(this string input)
+        {
+            return input.ToLowerInvariant() == "on";
+        }
     }
 }
