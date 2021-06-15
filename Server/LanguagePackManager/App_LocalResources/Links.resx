@@ -117,14 +117,32 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Add.Text" xml:space="preserve">
+    <value>Add</value>
+  </data>
   <data name="AssetRegex.Text" xml:space="preserve">
     <value>Asset Regex</value>
+  </data>
+  <data name="Back.Text" xml:space="preserve">
+    <value>Back</value>
   </data>
   <data name="Cancel.Text" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Edit.Text" xml:space="preserve">
+    <value>Edit</value>
+  </data>
   <data name="Edit.Title" xml:space="preserve">
     <value>Edit Package Link</value>
+  </data>
+  <data name="LastChecked.Text" xml:space="preserve">
+    <value>Last Checked</value>
+  </data>
+  <data name="LastVersion.Text" xml:space="preserve">
+    <value>Last Version</value>
+  </data>
+  <data name="Links.Title" xml:space="preserve">
+    <value>Github Links</value>
   </data>
   <data name="Name.Text" xml:space="preserve">
     <value>Name</value>

@@ -6,17 +6,17 @@
   var links = PackageLinkRepository.Instance.GetPackageLinks(Dnn.ModuleContext.ModuleId).OrderBy(l => l.Name);
 }
 
-<h1>Links</h1>
+<h1>@Dnn.LocalizeString("Links.Title")</h1>
 
 <table class="table">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Org Name</th>
-      <th>Repo Name</th>
-      <th>Asset Regex</th>
-      <th>Last Checked</th>
-      <th>Last Version</th>
+      <th>@Dnn.LocalizeString("Name")</th>
+      <th>@Dnn.LocalizeString("OrgName")</th>
+      <th>@Dnn.LocalizeString("RepoName")</th>
+      <th>@Dnn.LocalizeString("AssetRegex")</th>
+      <th>@Dnn.LocalizeString("LastChecked")</th>
+      <th>@Dnn.LocalizeString("LastVersion")</th>
       <th></th>
     </tr>
   </thead>
@@ -30,13 +30,14 @@
         <td>@link.AssetRegex</td>
         <td>@link.LastChecked</td>
         <td>@link.LastDownloadedVersion</td>
-        <td><a href="@Url.Action("Edit", "Links", new { LinkId = link.PackageLinkId })">edit</a></td>
+        <td><a href="@Url.Action("Edit", "Links", new { LinkId = link.PackageLinkId })">@Dnn.LocalizeString("Edit")</a></td>
       </tr>
     }
   </tbody>
 </table>
 
 <div>
-  <a href="@Url.Action("Edit", "Links", new { LinkId = -1 })" class="dnnPrimaryAction">new</a>
+  <a href="@Url.Action("Edit", "Links", new { LinkId = -1 })" class="dnnPrimaryAction">@Dnn.LocalizeString("Add")</a>
+  <a href="@Url.Action("Index", "Home")" class="dnnSecondaryAction">@Dnn.LocalizeString("Back")</a>
 </div>
 
