@@ -32,7 +32,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
 
             if (string.IsNullOrEmpty(UnzipResult.ManifestFile))
             {
-                if (!File.Exists(Path.Combine(this.UnzipResult.UnzipDirectory, "bin", "DotNetNuke.dll")))
+                if (!File.Exists(Path.Combine(this.UnzipResult.UnzipDirectory, "DotNetNuke.dll")))
                 {
                     this.ErrorMessage = "No DNN Manifest file found, nor a core distribution";
                     this.IsInError = true;
@@ -57,10 +57,16 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                 {
                     if (zipFile.FilePathLowered.StartsWith("install"))
                     {
-                        var rdr = new PackageReader(this.PackageLinkId, coreId, Path.Combine(this.UnzipResult.UnzipDirectory, zipFile.HashedName));
-                        if (!rdr.IsInError)
+                        try
                         {
-                            rdr.Process(releaseDate);
+                            var rdr = new PackageReader(this.PackageLinkId, coreId, Path.Combine(this.UnzipResult.UnzipDirectory, zipFile.HashedName));
+                            if (!rdr.IsInError)
+                            {
+                                rdr.Process(releaseDate);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
                         }
                     }
                 }
@@ -141,6 +147,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
 
         private void ProcessResourceFile(PackageVersion packageVersion, string highestVersion, string fileKey, string filePath)
         {
+            fileKey = fileKey.Trim('/');
             var processingNewPackage = packageVersion.Version.IsBiggerThan(highestVersion);
 
             var resFile = ResourceFileRepository.Instance.GetResourceFilesByPackage(packageVersion.PackageId).FirstOrDefault(r => r.FilePath == fileKey);

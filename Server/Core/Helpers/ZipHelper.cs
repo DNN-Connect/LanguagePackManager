@@ -14,8 +14,8 @@ namespace Connect.LanguagePackManager.Core.Helpers
             {
                 foreach (var entry in objZipInputStream.Entries)
                 {
-                    var fullName = entry.FullName.ToLower();
-                    var ext = Path.GetExtension(fullName).ToLower();
+                    var fullName = entry.FullName.Trim('/').ToLowerInvariant();
+                    var ext = Path.GetExtension(fullName);
                     switch (ext)
                     {
                         case ".dnn":

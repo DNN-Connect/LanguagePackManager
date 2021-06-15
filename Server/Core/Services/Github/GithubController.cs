@@ -29,17 +29,18 @@ namespace Connect.LanguagePackManager.Core.Services.Github
                         var result = GetGithubPackage(download.DownloadUrl);
                         if (!string.IsNullOrEmpty(result))
                         {
-                            package.LastDownloadedVersion = githubVersion.TagName.ParseVersion().ToNormalizedFormat();
-                            PackageLinkRepository.Instance.UpdatePackageLink(package.GetPackageLinkBase(), -1);
                             var reader = new PackageReader(package.PackageLinkId, -1, result);
                             if (!reader.IsInError)
                             {
                                 reader.Process(githubVersion.Published);
                             }
+                            package.LastDownloadedVersion = githubVersion.TagName.ParseVersion().ToNormalizedFormat();
                         }
                     }
                 }
             }
+            package.LastChecked = DateTime.Now;
+            PackageLinkRepository.Instance.UpdatePackageLink(package.GetPackageLinkBase(), -1);
         }
 
         public static string GetGithubPackage(string url)

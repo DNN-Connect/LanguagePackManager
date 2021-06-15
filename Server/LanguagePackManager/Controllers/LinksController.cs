@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Web.Mvc;
 using Connect.LanguagePackManager.Core.Models.PackageLinks;
 using Connect.LanguagePackManager.Core.Repositories;
@@ -25,18 +26,28 @@ namespace Connect.LanguagePackManager.Presentation.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int linkId, PackageLink link)
         {
+            link.Name = link.Name.Trim();
+            link.OrgName = link.OrgName.Trim().ToLowerInvariant();
+            link.RepoName = link.RepoName.Trim().ToLowerInvariant();
+            link.AssetRegex = link.AssetRegex.Trim();
+
             var existing = PackageLinkRepository.Instance.GetPackageLink(ModuleContext.ModuleId, linkId);
             if (existing == null)
             {
+                var clash = PackageLinkRepository.Instance.GetPackageLinks(ModuleContext.ModuleId).Where(p => p.OrgName == link.OrgName && p.RepoName == link.RepoName);
+                if (clash.Count() > 0)
+                {
+                    throw new System.Exception("This link already exists");
+                }
                 existing = new PackageLink()
                 {
                     ModuleId = ModuleContext.ModuleId
                 };
             }
-            existing.Name = link.Name.Trim();
-            existing.OrgName = link.OrgName.Trim();
-            existing.RepoName = link.RepoName.Trim();
-            existing.AssetRegex = link.AssetRegex.Trim();
+            existing.Name = link.Name;
+            existing.OrgName = link.OrgName;
+            existing.RepoName = link.RepoName;
+            existing.AssetRegex = link.AssetRegex;
             if (linkId == -1)
             {
                 PackageLinkRepository.Instance.AddPackageLink(existing.GetPackageLinkBase(), User.UserID);

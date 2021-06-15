@@ -11,7 +11,7 @@ namespace Connect.LanguagePackManager.Core.Repositories
             using (var context = DataContext.Instance())
             {
                 return context.ExecuteSingleOrDefault<Package>(System.Data.CommandType.Text,
-                    "SELECT * FROM {databaseOwner}{objectQualifier}vw_Connect_LPM_Packages WHERE LinkId=@0 AND PackageName=@1",
+                    "SELECT TOP 1 * FROM {databaseOwner}{objectQualifier}vw_Connect_LPM_Packages WHERE LinkId=@0 AND PackageName=@1",
                     packageLinkId, packageName);
             }
         }

@@ -220,7 +220,14 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                         {
                             if (zipFile.FilePathLowered == resFile)
                             {
-                                manifestModule.ResourcesFile = ZipHelper.Unzip(Path.Combine(unzipResult.UnzipDirectory, zipFile.HashedName), basePath);
+                                try
+                                {
+                                    manifestModule.ResourcesFile = ZipHelper.Unzip(Path.Combine(unzipResult.UnzipDirectory, zipFile.HashedName), basePath);
+                                }
+                                catch (Exception ex) 
+                                {
+                                    // ignoring for now
+                                }
                             }
                         }
                     }
