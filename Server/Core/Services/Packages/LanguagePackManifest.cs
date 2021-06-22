@@ -79,7 +79,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
 
                             foreach (var f in unzipResult.ResourceFiles.Values)
                             {
-                                if (f.FilePathLowered.CompareTo(fileInZip) == 0)
+                                if (f.FilePathLowered.Replace("\\", "/").CompareTo(fileInZip) == 0)
                                 {
                                     var rfile = new ResxFile(fileKey, Path.Combine(unzipResult.UnzipDirectory, f.HashedName));
                                     comp.ResourceFiles.Add(rfile);

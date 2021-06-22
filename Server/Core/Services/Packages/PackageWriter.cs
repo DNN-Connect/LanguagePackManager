@@ -83,22 +83,25 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                     {
                         var pack = Data.Sprocs.GetPack(package.PackageId, version, genericLocaleId, specificLocaleId);
                         var fileList = pack.Select(p => p.FilePath).Distinct();
-                        var targetFileList = new List<string>();
-
-                        foreach (var filePath in fileList)
+                        if (fileList.Count() > 0)
                         {
-                            var targetPath = filePath.ReplaceEnd(".resx", pattern);
-                            targetFileList.Add(targetPath);
-                            var resx = new ResxFile();
-                            foreach (var entry in pack.Where(p => p.FilePath == filePath))
-                            {
-                                resx.Resources[entry.TextKey] = entry.TextValue;
-                            }
-                            resx.Recreate();
-                            zipStrm.WriteFileToZip(targetPath, resx.XmlToFormattedByteArray());
-                        }
+                            var targetFileList = new List<string>();
 
-                        manifest.AddPackage(package.PackageName, package.FriendlyName, package.Version, targetFileList);
+                            foreach (var filePath in fileList)
+                            {
+                                var targetPath = filePath.ReplaceEnd(".resx", pattern);
+                                targetFileList.Add(targetPath);
+                                var resx = new ResxFile();
+                                foreach (var entry in pack.Where(p => p.FilePath == filePath))
+                                {
+                                    resx.Resources[entry.TextKey] = entry.TextValue;
+                                }
+                                resx.Recreate();
+                                zipStrm.WriteFileToZip(targetPath, resx.XmlToFormattedByteArray());
+                            }
+
+                            manifest.AddPackage(package.PackageName, package.FriendlyName, package.Version, targetFileList);
+                        }
                     }
 
                     manifest.Compile(settings);
