@@ -18,6 +18,9 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
             var packageVersion = PackageVersionRepository.Instance.GetPackageVersion(portalId, packageName, version);
             if (packageVersion == null) return "";
 
+            var modInfo = DotNetNuke.Entities.Modules.ModuleController.Instance.GetModule(packageVersion.ModuleId, -1, true);
+            var settings = ModuleSettings.GetSettings(modInfo);
+
             var packageList = new List<PackageVersion>();
             packageList.Add(packageVersion);
 
@@ -41,8 +44,9 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                 specificLocaleId = localeChain[1].LocaleId;
             }
 
-            fileName = "ResourcePack." + CleanName(packageName);
-            fileName += "." + version + "." + locale + ".zip";
+            fileName = $"ResourcePack.{CleanName(packageName)}.{version}.{locale}";
+            fileName += isFullPack ? ".full" : "";
+            fileName += ".zip";
             string packPath = Common.Globals.GetLpmFolder(portalId, "Cache") + @"\";
 
             // check for caching
@@ -79,10 +83,12 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                     {
                         var pack = Data.Sprocs.GetPack(package.PackageId, version, genericLocaleId, specificLocaleId);
                         var fileList = pack.Select(p => p.FilePath).Distinct();
+                        var targetFileList = new List<string>();
 
                         foreach (var filePath in fileList)
                         {
                             var targetPath = filePath.ReplaceEnd(".resx", pattern);
+                            targetFileList.Add(targetPath);
                             var resx = new ResxFile();
                             foreach (var entry in pack.Where(p => p.FilePath == filePath))
                             {
@@ -92,10 +98,10 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                             zipStrm.WriteFileToZip(targetPath, resx.XmlToFormattedByteArray());
                         }
 
-                        manifest.AddPackage(package.PackageName, package.PackageName, "", fileList.ToList()); // todo friendlyName and version
+                        manifest.AddPackage(package.PackageName, package.FriendlyName, package.Version, targetFileList);
                     }
 
-                    manifest.Compile();
+                    manifest.Compile(settings);
                     zipStrm.WriteFileToZip($"{packageName}.dnn", manifest.XmlToFormattedByteArray());
                 }
             }

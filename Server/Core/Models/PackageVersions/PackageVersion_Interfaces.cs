@@ -17,8 +17,9 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
   {
    base.Fill(dr);
    PackageName = Convert.ToString(Null.SetNull(dr["PackageName"], PackageName));
+   FriendlyName = Convert.ToString(Null.SetNull(dr["FriendlyName"], FriendlyName));
    PackageType = Convert.ToString(Null.SetNull(dr["PackageType"], PackageType));
-   Name = Convert.ToString(Null.SetNull(dr["Name"], Name));
+   PackageLinkName = Convert.ToString(Null.SetNull(dr["PackageLinkName"], PackageLinkName));
    LastChecked = (DateTime)(Null.SetNull(dr["LastChecked"], LastChecked));
    ModuleId = Convert.ToInt32(Null.SetNull(dr["ModuleId"], ModuleId));
    PortalID = Convert.ToInt32(Null.SetNull(dr["PortalID"], PortalID));
@@ -31,10 +32,12 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
    switch (strPropertyName.ToLower()) {
     case "packagename": // NVarChar
      return PropertyAccess.FormatString(PackageName, strFormat);
+    case "friendlyname": // NVarChar
+     return PropertyAccess.FormatString(FriendlyName, strFormat);
     case "packagetype": // NVarChar
      return PropertyAccess.FormatString(PackageType, strFormat);
-    case "name": // NVarChar
-     return PropertyAccess.FormatString(Name, strFormat);
+    case "packagelinkname": // NVarChar
+     return PropertyAccess.FormatString(PackageLinkName, strFormat);
     case "lastchecked": // DateTime
      if (LastChecked == null)
      {

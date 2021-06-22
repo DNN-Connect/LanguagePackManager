@@ -21,9 +21,11 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
         [DataMember]
         public string PackageName { get; set; }
         [DataMember]
+        public string FriendlyName { get; set; }
+        [DataMember]
         public string PackageType { get; set; }
         [DataMember]
-        public string Name { get; set; }
+        public string PackageLinkName { get; set; }
         [DataMember]
         public DateTime? LastChecked { get; set; }
         [DataMember]
@@ -54,8 +56,9 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
             res.ReleaseDate = ReleaseDate;
             res.Downloaded = Downloaded;
             res.PackageName = PackageName;
+            res.FriendlyName = FriendlyName;
             res.PackageType = PackageType;
-            res.Name = Name;
+            res.PackageLinkName = PackageLinkName;
             res.LastChecked = LastChecked;
             res.ModuleId = ModuleId;
             res.PortalID = PortalID;

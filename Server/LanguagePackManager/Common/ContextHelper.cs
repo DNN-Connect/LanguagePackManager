@@ -11,6 +11,7 @@ using DotNetNuke.Web.Api;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Framework;
 using DotNetNuke.Framework.JavaScriptLibraries;
+using Connect.LanguagePackManager.Core.Common;
 
 namespace Connect.LanguagePackManager.Presentation.Common
 {

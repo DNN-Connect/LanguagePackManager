@@ -1,12 +1,24 @@
-using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Modules.Settings;
-
-namespace Connect.LanguagePackManager.Presentation.Common
+﻿namespace Connect.LanguagePackManager.Core.Common
 {
+    using DotNetNuke.Entities.Modules;
+    using DotNetNuke.Entities.Modules.Settings;
+
     public class ModuleSettings
     {
         [ModuleSetting]
-        public string View { get; set; } = "Index";
+        public string OwnerName { get; set; } = "";
+
+        [ModuleSetting]
+        public string OwnerOrganization { get; set; } = "";
+
+        [ModuleSetting]
+        public string OwnerUrl { get; set; } = "";
+
+        [ModuleSetting]
+        public string OwnerEmail { get; set; } = "";
+
+        [ModuleSetting]
+        public string License { get; set; } = "";
 
         public static ModuleSettings GetSettings(ModuleInfo module)
         {

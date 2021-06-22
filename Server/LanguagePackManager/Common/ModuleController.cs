@@ -1,3 +1,4 @@
+using Connect.LanguagePackManager.Core.Common;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using System;

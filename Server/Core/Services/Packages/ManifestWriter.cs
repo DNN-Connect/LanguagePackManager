@@ -17,7 +17,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
             this.Locale = loc;
         }
 
-        public void Compile()
+        public void Compile(ModuleSettings settings)
         {
             this.CreateXmlDeclaration("1.0", null, null);
             var root = this.CreateElement("dotnetnuke");
@@ -34,10 +34,11 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                 packageNode.AddChildElement("friendlyName", package.FriendlyName + " " + this.Locale.NativeName);
                 packageNode.AddChildElement("description", $"{this.Locale.EnglishName} language pack for {package.FriendlyName}");
                 var owner = packageNode.AddChildElement("owner");
-                owner.AddChildElement("name", "");
-                owner.AddChildElement("organization", "");
-                owner.AddChildElement("url", "");
-                owner.AddChildElement("email", "");
+                owner.AddChildElement("name", settings.OwnerName);
+                owner.AddChildElement("organization", settings.OwnerOrganization);
+                owner.AddChildElement("url", settings.OwnerUrl);
+                owner.AddChildElement("email", settings.OwnerEmail);
+                packageNode.AddChildElement("license", settings.License);
                 var component = packageNode.AddChildElement("components").AddChildElement("component");
                 component.AddAttribute("type", package.IsCore ? "CoreLanguage" : "ExtensionLanguage");
                 var files = component.AddChildElement("languageFiles");
@@ -50,8 +51,8 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                 files.AddChildElement("basePath", "");
                 foreach (var filePath in package.ResourceFiles)
                 {
-                    var file = files.AddChildElement( "languageFile");
-                    file.AddChildElement( "path", filePath);
+                    var file = files.AddChildElement("languageFile");
+                    file.AddChildElement("path", Path.GetDirectoryName(filePath));
                     file.AddChildElement("name", Path.GetFileName(filePath));
                 }
             }

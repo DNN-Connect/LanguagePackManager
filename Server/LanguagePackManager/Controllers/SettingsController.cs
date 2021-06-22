@@ -2,6 +2,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Mvc.Framework.ActionFilters;
 using Connect.LanguagePackManager.Presentation.Common;
 using System.Web.Mvc;
+using Connect.LanguagePackManager.Core.Common;
 
 namespace Connect.LanguagePackManager.Presentation.Controllers
 {

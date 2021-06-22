@@ -8,7 +8,7 @@ namespace Connect.LanguagePackManager.Presentation.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            return View(LanguagePackManagerModuleContext.Settings.View);
+            return View();
         }
     }
 }

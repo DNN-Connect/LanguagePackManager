@@ -1,18 +1,40 @@
-@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Connect.LanguagePackManager.Presentation.Common.ModuleSettings>
+@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<Connect.LanguagePackManager.Core.Common.ModuleSettings>
 @using System.Web.Mvc
 @using System.Web.Mvc.Html
 @using DotNetNuke.Web.Mvc.Helpers
 @{ 
-    var viewDir = new System.IO.DirectoryInfo(Server.MapPath("~/DesktopModules/MVC/DNN Connect/LanguagePackManager/Views/Home"));
-    var list = viewDir.GetFiles("*.cshtml").Select(f => new SelectListItem() { Text = f.Name, Value= System.IO.Path.GetFileNameWithoutExtension(f.Name)});
 } 
 
-<h2 id="dnnSitePanel-BasicSettings" class="dnnFormSectionHead">@Dnn.LocalizeString("BasicSettings")</h2>
+<h2 id="dnnSitePanel-BasicSettings" class="dnnFormSectionHead">@Dnn.LocalizeString("Settings")</h2>
 <fieldset>
     <div class="dnnFormItem">
         <div class="dnnLabel" style="position: relative;">
-            @Html.LabelFor(m => Model.View, Dnn.LocalizeString("View"), new { @class = "col-md-2 control-label" })
+            @Html.LabelFor(m => Model.OwnerName, Dnn.LocalizeString("OwnerName"), new { @class = "col-md-2 control-label" })
         </div>
-        @Html.DropDownListFor(m => Model.View, list)
+        @Html.TextBoxFor(m => Model.OwnerName)
+    </div>
+    <div class="dnnFormItem">
+        <div class="dnnLabel" style="position: relative;">
+            @Html.LabelFor(m => Model.OwnerOrganization, Dnn.LocalizeString("OwnerOrganization"), new { @class = "col-md-2 control-label" })
+        </div>
+        @Html.TextBoxFor(m => Model.OwnerOrganization)
+    </div>
+    <div class="dnnFormItem">
+        <div class="dnnLabel" style="position: relative;">
+            @Html.LabelFor(m => Model.OwnerUrl, Dnn.LocalizeString("OwnerUrl"), new { @class = "col-md-2 control-label" })
+        </div>
+        @Html.TextBoxFor(m => Model.OwnerUrl)
+    </div>
+    <div class="dnnFormItem">
+        <div class="dnnLabel" style="position: relative;">
+            @Html.LabelFor(m => Model.OwnerEmail, Dnn.LocalizeString("OwnerEmail"), new { @class = "col-md-2 control-label" })
+        </div>
+        @Html.TextBoxFor(m => Model.OwnerEmail)
+    </div>
+    <div class="dnnFormItem">
+        <div class="dnnLabel" style="position: relative;">
+            @Html.LabelFor(m => Model.License, Dnn.LocalizeString("License"), new { @class = "col-md-2 control-label" })
+        </div>
+        @Html.TextAreaFor(m => Model.License)
     </div>
 </fieldset>

@@ -117,13 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BasicSettings.Text" xml:space="preserve">
-    <value>Basic Settings</value>
+  <data name="License.Text" xml:space="preserve">
+    <value>License</value>
   </data>
-  <data name="View.Help" xml:space="preserve">
-    <value>Select view to load for this module</value>
+  <data name="OwnerEmail.Text" xml:space="preserve">
+    <value>Owner Email</value>
   </data>
-  <data name="View.Text" xml:space="preserve">
-    <value>View</value>
+  <data name="OwnerName.Text" xml:space="preserve">
+    <value>Owner Name</value>
+  </data>
+  <data name="OwnerOrganization.Text" xml:space="preserve">
+    <value>Owner Organization</value>
+  </data>
+  <data name="OwnerUrl.Text" xml:space="preserve">
+    <value>Owner Url</value>
+  </data>
+  <data name="Settings.Text" xml:space="preserve">
+    <value>Settings</value>
   </data>
 </root>
