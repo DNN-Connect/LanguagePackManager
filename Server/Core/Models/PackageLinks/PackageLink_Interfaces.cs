@@ -16,6 +16,7 @@ namespace Connect.LanguagePackManager.Core.Models.PackageLinks
   public override void Fill(IDataReader dr)
   {
    base.Fill(dr);
+   PortalID = Convert.ToInt32(Null.SetNull(dr["PortalID"], PortalID));
    CreatedByUser = Convert.ToString(Null.SetNull(dr["CreatedByUser"], CreatedByUser));
    ModifiedByUser = Convert.ToString(Null.SetNull(dr["ModifiedByUser"], ModifiedByUser));
   }
@@ -25,6 +26,12 @@ namespace Connect.LanguagePackManager.Core.Models.PackageLinks
   public override string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, DotNetNuke.Entities.Users.UserInfo accessingUser, DotNetNuke.Services.Tokens.Scope accessLevel, ref bool propertyNotFound)
   {
    switch (strPropertyName.ToLower()) {
+    case "portalid": // Int
+     if (PortalID == null)
+     {
+         return "";
+     };
+     return ((int)PortalID).ToString(strFormat, formatProvider);
     case "createdbyuser": // NVarChar
      if (CreatedByUser == null)
      {

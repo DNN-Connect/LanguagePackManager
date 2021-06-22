@@ -6,8 +6,8 @@ namespace Connect.LanguagePackManager.Presentation.Common
     {
         public void RegisterRoutes(IMapRoute mapRouteManager)
         {
-            mapRouteManager.MapHttpRoute("DNN Connect/LanguagePackManager", "LanguagePackManagerMap1", "{controller}/{action}", null, null, new[] { "Connect.LanguagePackManager.Presentation.Api" });
-            mapRouteManager.MapHttpRoute("DNN Connect/LanguagePackManager", "LanguagePackManagerMap2", "{controller}/{action}/{id}", null, new { id = "-?\\d+" }, new[] { "Connect.LanguagePackManager.Presentation.Api" });
+            mapRouteManager.MapHttpRoute("Connect/LanguagePackManager", "LanguagePackManagerMap1", "{controller}/{action}", null, null, new[] { "Connect.LanguagePackManager.Presentation.Api" });
+            mapRouteManager.MapHttpRoute("Connect/LanguagePackManager", "LanguagePackManagerMap2", "{controller}/{action}/{id}", null, new { id = "-?\\d+" }, new[] { "Connect.LanguagePackManager.Presentation.Api" });
         }
     }
 }

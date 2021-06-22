@@ -20,7 +20,7 @@ namespace Connect.LanguagePackManager.Core.Models.Translations
         [DataMember]
         public int TextId { get; set; }
         [DataMember]
-        public string Locale { get; set; }
+        public int Locale { get; set; }
         [DataMember]
         public string TextValue { get; set; }
         #endregion
@@ -31,7 +31,7 @@ namespace Connect.LanguagePackManager.Core.Models.Translations
             if (translation.TextId > -1)
                 TextId = translation.TextId;
 
-            if (!String.IsNullOrEmpty(translation.Locale))
+            if (translation.Locale > -1)
                 Locale = translation.Locale;
 
             if (!String.IsNullOrEmpty(translation.TextValue))

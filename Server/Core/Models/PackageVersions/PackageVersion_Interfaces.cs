@@ -20,6 +20,8 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
    PackageType = Convert.ToString(Null.SetNull(dr["PackageType"], PackageType));
    Name = Convert.ToString(Null.SetNull(dr["Name"], Name));
    LastChecked = (DateTime)(Null.SetNull(dr["LastChecked"], LastChecked));
+   ModuleId = Convert.ToInt32(Null.SetNull(dr["ModuleId"], ModuleId));
+   PortalID = Convert.ToInt32(Null.SetNull(dr["PortalID"], PortalID));
   }
   #endregion
 
@@ -39,6 +41,14 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
          return "";
      };
      return ((DateTime)LastChecked).ToString(strFormat, formatProvider);
+    case "moduleid": // Int
+     return ModuleId.ToString(strFormat, formatProvider);
+    case "portalid": // Int
+     if (PortalID == null)
+     {
+         return "";
+     };
+     return ((int)PortalID).ToString(strFormat, formatProvider);
     default:
        return base.GetProperty(strPropertyName, strFormat, formatProvider, accessingUser, accessLevel, ref propertyNotFound);
    }

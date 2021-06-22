@@ -48,6 +48,10 @@ namespace Connect.LanguagePackManager.Core.Models.Packages
     case "packagetype": // NVarChar
      return PropertyAccess.FormatString(PackageType, strFormat);
     case "installpath": // NVarChar
+     if (InstallPath == null)
+     {
+         return "";
+     };
      return PropertyAccess.FormatString(InstallPath, strFormat);
     case "lastversion": // VarChar
      if (LastVersion == null)

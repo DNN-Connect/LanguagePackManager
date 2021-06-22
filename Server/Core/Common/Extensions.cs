@@ -1,5 +1,6 @@
 ﻿using Connect.LanguagePackManager.Core.Models.Texts;
 using System;
+using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -44,7 +45,7 @@ namespace Connect.LanguagePackManager.Core.Common
 
         public static bool CoversVersion(this Text input, string normalizedVersion)
         {
-            var res = !input.Version.IsBiggerThan(normalizedVersion);
+            var res = !input.FirstInVersion.IsBiggerThan(normalizedVersion);
             if (res && !string.IsNullOrEmpty(input.DeprecatedInVersion))
             {
                 res = input.DeprecatedInVersion.IsBiggerThan(normalizedVersion);
@@ -62,6 +63,28 @@ namespace Connect.LanguagePackManager.Core.Common
         public static bool OnOffToBool(this string input)
         {
             return input.ToLowerInvariant() == "on";
+        }
+
+        public static string ReplaceEnd(this string input, string replace, string replaceWith)
+        {
+            if (!input.EndsWith(replace)) return input;
+            input = input.Substring(0, input.Length - replace.Length);
+            return input + replaceWith;
+        }
+
+        public static void WriteFileToZip(this ZipArchive input, string fileName, byte[] fileData)
+        {
+            var newEntry = input.CreateEntry(fileName);
+            using (var zipStream = newEntry.Open())
+            {
+                try
+                {
+                    zipStream.Write(fileData, 0, fileData.Length);
+                }
+                catch (Exception ex)
+                {
+                }
+            }
         }
     }
 }

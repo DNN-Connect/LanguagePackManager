@@ -46,7 +46,7 @@ namespace Connect.LanguagePackManager.Core.Services.Github
         public static string GetGithubPackage(string url)
         {
             var fileToDownload = url.Substring(url.LastIndexOf('/') + 1);
-            var fileToSave = Path.Combine(Globals.GetTempFolder(), fileToDownload);
+            var fileToSave = Path.Combine(Globals.GetLpmFolder(-1, "Temp"), fileToDownload);
             if (File.Exists(fileToSave)) return fileToSave;
             if (GithubService.DownloadFile(url, fileToSave))
             {

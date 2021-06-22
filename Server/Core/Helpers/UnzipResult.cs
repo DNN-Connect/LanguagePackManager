@@ -14,7 +14,7 @@ namespace Connect.LanguagePackManager.Core.Helpers
             public string HashedName { get; set; }
         }
 
-        public string UnzipDirectory { get; set; } = Path.Combine(Globals.GetTempFolder(), (Guid.NewGuid()).ToString());
+        public string UnzipDirectory { get; set; } = Path.Combine(Globals.GetLpmFolder(-1, "Temp"), (Guid.NewGuid()).ToString());
         public SortedDictionary<string, FoundFile> ResourceFiles { get; set; } = new SortedDictionary<string, FoundFile>();
         public SortedDictionary<string, FoundFile> ZipFiles { get; set; } = new SortedDictionary<string, FoundFile>();
         public string ManifestFile { get; set; }

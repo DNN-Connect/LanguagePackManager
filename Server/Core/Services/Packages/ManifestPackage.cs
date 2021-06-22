@@ -1,11 +1,6 @@
-﻿using Connect.LanguagePackManager.Core.Common;
-using Connect.LanguagePackManager.Core.Helpers;
-using Connect.LanguagePackManager.Core.Services.ResourceFiles;
+﻿using Connect.LanguagePackManager.Core.Helpers;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace Connect.LanguagePackManager.Core.Services.Packages

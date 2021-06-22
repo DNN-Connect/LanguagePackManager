@@ -26,6 +26,10 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
         public string Name { get; set; }
         [DataMember]
         public DateTime? LastChecked { get; set; }
+        [DataMember]
+        public int ModuleId { get; set; }
+        [DataMember]
+        public int? PortalID { get; set; }
         #endregion
 
         #region Methods
@@ -53,6 +57,8 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
             res.PackageType = PackageType;
             res.Name = Name;
             res.LastChecked = LastChecked;
+            res.ModuleId = ModuleId;
+            res.PortalID = PortalID;
             return res;
         }
         #endregion

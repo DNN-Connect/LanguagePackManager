@@ -30,6 +30,7 @@ namespace Connect.LanguagePackManager.Presentation.Controllers
             foreach (var p in manifest.Components)
             {
                 var locale = generic ? p.Locale.Substring(0, 2) : p.Locale;
+                var localeId = LocaleRepository.Instance.GetOrCreateLocale(locale).LocaleId;
                 var dbResFiles = ResourceFileRepository.Instance.GetResourceFilesByPackage(p.Package.PackageId);
                 foreach (var rf in p.ResourceFiles)
                 {
@@ -42,7 +43,7 @@ namespace Connect.LanguagePackManager.Presentation.Controllers
                             var dbT = dbTexts.FirstOrDefault(t => t.TextKey == tt && t.CoversVersion(p.Version));
                             if (dbT != null)
                             {
-                                Sprocs.SetTranslation(dbT.TextId, locale, rf.Resources[tt], User.UserID);
+                                Sprocs.SetTranslation(dbT.TextId, localeId, rf.Resources[tt], User.UserID);
                             }
                         }
                     }

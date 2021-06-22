@@ -39,10 +39,6 @@ namespace Connect.LanguagePackManager.Core.Models.Translations
     case "firstinversion": // VarChar
      return PropertyAccess.FormatString(FirstInVersion, strFormat);
     case "deprecatedinversion": // VarChar
-     if (DeprecatedInVersion == null)
-     {
-         return "";
-     };
      return PropertyAccess.FormatString(DeprecatedInVersion, strFormat);
     case "createdbyuser": // NVarChar
      if (CreatedByUser == null)

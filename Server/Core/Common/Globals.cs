@@ -10,9 +10,17 @@ namespace Connect.LanguagePackManager.Core.Common
         public const string glbCoreName = "Core";
         public const string glbCoreFriendlyName = "DNN Core";
 
-        public static string GetTempFolder()
+        public static string GetLpmFolder(int portalId, string subFolder)
         {
-            var res = Path.Combine(DotNetNuke.Common.Globals.HostMapPath, @"LPM\Temp");
+            var res = Path.Combine(GetLpmFolder(portalId), subFolder);
+            if (!Directory.Exists(res)) Directory.CreateDirectory(res);
+            return res;
+        }
+
+        public static string GetLpmFolder(int portalId)
+        {
+            var res = portalId == -1 ? DotNetNuke.Common.Globals.HostMapPath : DotNetNuke.Entities.Portals.PortalController.Instance.GetPortal(portalId).HomeDirectoryMapPath;
+            res = Path.Combine(res, "LPM");
             if (!Directory.Exists(res)) Directory.CreateDirectory(res);
             return res;
         }

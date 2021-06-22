@@ -14,6 +14,15 @@ namespace Connect.LanguagePackManager.Core.Repositories
         {
             return () => new TranslationRepository();
         }
+        public IEnumerable<Translation> GetTranslationsByLocale(int locale)
+        {
+            using (var context = DataContext.Instance())
+            {
+                return context.ExecuteQuery<Translation>(System.Data.CommandType.Text,
+                    "SELECT * FROM {databaseOwner}{objectQualifier}vw_Connect_LPM_Translations WHERE Locale=@0",
+                    locale);
+            }
+        }
         public IEnumerable<Translation> GetTranslationsByText(int textId)
         {
             using (var context = DataContext.Instance())
@@ -23,7 +32,7 @@ namespace Connect.LanguagePackManager.Core.Repositories
                     textId);
             }
         }
-        public Translation GetTranslation(int textId, string locale)
+        public Translation GetTranslation(int textId, int locale)
         {
             using (var context = DataContext.Instance())
             {
@@ -35,6 +44,7 @@ namespace Connect.LanguagePackManager.Core.Repositories
         public void AddTranslation(TranslationBase translation, int userId)
         {
             Requires.NotNull(translation);
+            Requires.NotNull(translation.Locale);
             Requires.NotNull(translation.TextId);
             translation.CreatedByUserID = userId;
             translation.CreatedOnDate = DateTime.Now;
@@ -53,14 +63,24 @@ namespace Connect.LanguagePackManager.Core.Repositories
         {
             DeleteTranslation(translation.TextId, translation.Locale);
         }
-        public void DeleteTranslation(int textId, string locale)
+        public void DeleteTranslation(int textId, int locale)
         {
+             Requires.NotNull(locale);
              Requires.NotNull(textId);
             using (var context = DataContext.Instance())
             {
                 context.Execute(System.Data.CommandType.Text,
                     "DELETE FROM {databaseOwner}{objectQualifier}Connect_LPM_Translations WHERE TextId=@0 AND Locale=@1",
                     textId,locale);
+            }
+        }
+        public void DeleteTranslationsByLocale(int locale)
+        {
+            using (var context = DataContext.Instance())
+            {
+                context.Execute(System.Data.CommandType.Text,
+                    "DELETE FROM {databaseOwner}{objectQualifier}Connect_LPM_Translations WHERE Locale=@0",
+                    locale);
             }
         }
         public void DeleteTranslationsByText(int textId)
@@ -75,6 +95,7 @@ namespace Connect.LanguagePackManager.Core.Repositories
         public void UpdateTranslation(TranslationBase translation, int userId)
         {
             Requires.NotNull(translation);
+            Requires.NotNull(translation.Locale);
             Requires.NotNull(translation.TextId);
             translation.LastModifiedByUserID = userId;
             translation.LastModifiedOnDate = DateTime.Now;
@@ -89,11 +110,13 @@ namespace Connect.LanguagePackManager.Core.Repositories
 
     public partial interface ITranslationRepository
     {
+        IEnumerable<Translation> GetTranslationsByLocale(int locale);
         IEnumerable<Translation> GetTranslationsByText(int textId);
-        Translation GetTranslation(int textId, string locale);
+        Translation GetTranslation(int textId, int locale);
         void AddTranslation(TranslationBase translation, int userId);
         void DeleteTranslation(TranslationBase translation);
-        void DeleteTranslation(int textId, string locale);
+        void DeleteTranslation(int textId, int locale);
+        void DeleteTranslationsByLocale(int locale);
         void DeleteTranslationsByText(int textId);
         void UpdateTranslation(TranslationBase translation, int userId);
     }

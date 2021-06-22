@@ -17,7 +17,8 @@ namespace Connect.LanguagePackManager.Core.Models.Texts
   {
    base.Fill(dr);
    FilePath = Convert.ToString(Null.SetNull(dr["FilePath"], FilePath));
-   Version = Convert.ToString(Null.SetNull(dr["Version"], Version));
+   PackageId = Convert.ToInt32(Null.SetNull(dr["PackageId"], PackageId));
+   FirstInVersion = Convert.ToString(Null.SetNull(dr["FirstInVersion"], FirstInVersion));
    DeprecatedInVersion = Convert.ToString(Null.SetNull(dr["DeprecatedInVersion"], DeprecatedInVersion));
   }
   #endregion
@@ -28,13 +29,11 @@ namespace Connect.LanguagePackManager.Core.Models.Texts
    switch (strPropertyName.ToLower()) {
     case "filepath": // NVarChar
      return PropertyAccess.FormatString(FilePath, strFormat);
-    case "version": // VarChar
-     return PropertyAccess.FormatString(Version, strFormat);
+    case "packageid": // Int
+     return PackageId.ToString(strFormat, formatProvider);
+    case "firstinversion": // VarChar
+     return PropertyAccess.FormatString(FirstInVersion, strFormat);
     case "deprecatedinversion": // VarChar
-     if (DeprecatedInVersion == null)
-     {
-         return "";
-     };
      return PropertyAccess.FormatString(DeprecatedInVersion, strFormat);
     default:
        return base.GetProperty(strPropertyName, strFormat, formatProvider, accessingUser, accessLevel, ref propertyNotFound);

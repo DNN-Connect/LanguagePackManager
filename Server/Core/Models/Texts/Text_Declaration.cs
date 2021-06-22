@@ -21,7 +21,9 @@ namespace Connect.LanguagePackManager.Core.Models.Texts
         [DataMember]
         public string FilePath { get; set; }
         [DataMember]
-        public string Version { get; set; }
+        public int PackageId { get; set; }
+        [DataMember]
+        public string FirstInVersion { get; set; }
         [DataMember]
         public string DeprecatedInVersion { get; set; }
         #endregion
@@ -48,7 +50,8 @@ namespace Connect.LanguagePackManager.Core.Models.Texts
             res.OriginalValue = OriginalValue;
             res.DeprecatedInVersionId = DeprecatedInVersionId;
             res.FilePath = FilePath;
-            res.Version = Version;
+            res.PackageId = PackageId;
+            res.FirstInVersion = FirstInVersion;
             res.DeprecatedInVersion = DeprecatedInVersion;
             return res;
         }

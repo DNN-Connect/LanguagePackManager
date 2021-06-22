@@ -20,6 +20,8 @@ namespace Connect.LanguagePackManager.Core.Models.PackageLinks
 
         #region Properties
         [DataMember]
+        public int? PortalID { get; set; }
+        [DataMember]
         public string CreatedByUser { get; set; }
         [DataMember]
         public string ModifiedByUser { get; set; }
@@ -54,6 +56,7 @@ namespace Connect.LanguagePackManager.Core.Models.PackageLinks
             res.AssetRegex = AssetRegex;
             res.LastChecked = LastChecked;
             res.LastDownloadedVersion = LastDownloadedVersion;
+            res.PortalID = PortalID;
             res.CreatedByUser = CreatedByUser;
             res.ModifiedByUser = ModifiedByUser;
             res.CreatedByUserID = CreatedByUserID;
