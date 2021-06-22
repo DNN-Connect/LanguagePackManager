@@ -32,7 +32,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
 
             if (string.IsNullOrEmpty(UnzipResult.ManifestFile))
             {
-                if (!File.Exists(Path.Combine(this.UnzipResult.UnzipDirectory, "DotNetNuke.dll")))
+                if (this.UnzipResult.DnnVersion == new System.Version(0, 0, 0))
                 {
                     this.ErrorMessage = "No DNN Manifest file found, nor a core distribution";
                     this.IsInError = true;
@@ -177,7 +177,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                 var value = foundTexts[key];
                 if (processingNewPackage)
                 {
-                    var dbCurrentText = textsInDb.FirstOrDefault(t => t.TextKey == key && t.DeprecatedInVersion == null);
+                    var dbCurrentText = textsInDb.FirstOrDefault(t => t.TextKey == key && t.DeprecatedInVersion == "99.99.99");
                     if (dbCurrentText == null)
                     {
                         // we never had this key in the DB
@@ -193,7 +193,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                 else
                 {
                     // this gets tricky as we need to work out how this fits in as it's an older version we're uploading
-                    var dbCurrentText = textsInDb.FirstOrDefault(t => t.TextKey == key && t.DeprecatedInVersion == null);
+                    var dbCurrentText = textsInDb.FirstOrDefault(t => t.TextKey == key && t.DeprecatedInVersion == "99.99.99");
                     if (dbCurrentText == null)
                     {
                         // we never had this key in the DB but it didn't appear in the last version
@@ -253,7 +253,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
             // Now we should check if we need to deprecate any texts. Ignore if we're uploading an older package
             if (processingNewPackage)
             {
-                foreach (var dbText in textsInDb.Where(t => string.IsNullOrEmpty(t.DeprecatedInVersion)))
+                foreach (var dbText in textsInDb.Where(t => t.DeprecatedInVersion == "99.99.99"))
                 {
                     if (!foundTexts.Keys.Contains(dbText.TextKey))
                     {

@@ -45,11 +45,7 @@ namespace Connect.LanguagePackManager.Core.Common
 
         public static bool CoversVersion(this Text input, string normalizedVersion)
         {
-            var res = !input.FirstInVersion.IsBiggerThan(normalizedVersion);
-            if (res && !string.IsNullOrEmpty(input.DeprecatedInVersion))
-            {
-                res = input.DeprecatedInVersion.IsBiggerThan(normalizedVersion);
-            }
+            var res = !input.FirstInVersion.IsBiggerThan(normalizedVersion) && input.DeprecatedInVersion.IsBiggerThan(normalizedVersion);
 
             return res;
         }

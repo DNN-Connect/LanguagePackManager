@@ -26,7 +26,7 @@ namespace Connect.LanguagePackManager.Core.Helpers
                             if (entry.Name.ToLowerInvariant() == "dotnetnuke.dll")
                             {
                                 entry.ExtractToFile(Path.Combine(result.UnzipDirectory, entry.Name), true);
-                                result.DnnVersion = Globals.GetAssemblyVersion(Path.Combine(result.UnzipDirectory, "bin", entry.Name));
+                                result.DnnVersion = Globals.GetAssemblyVersion(Path.Combine(result.UnzipDirectory, entry.Name));
                                 try
                                 {
                                     File.Delete(Path.Combine(result.UnzipDirectory, entry.Name));
