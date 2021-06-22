@@ -1,7 +1,6 @@
 @inherits LanguagePackManagerWebPage
 @using Connect.LanguagePackManager.Presentation.Common
 @{
-  LanguagePackManagerModuleContext.AddModuleScript();
 }
 
 <h1>LanguagePack Manager</h1>
@@ -9,4 +8,5 @@
 <div>
   <a href="@Url.Action("Index", "Links")" class="dnnSecondaryAction">@Dnn.LocalizeString("Links")</a>
   <a href="@Url.Action("Upload", "Packs")" class="dnnSecondaryAction">@Dnn.LocalizeString("Upload")</a>
+  <a href="@Url.Action("Index", "Packs")" class="dnnSecondaryAction">@Dnn.LocalizeString("Packs")</a>
 </div>

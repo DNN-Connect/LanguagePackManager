@@ -1,0 +1,46 @@
+@inherits LanguagePackManagerWebPage
+@using Connect.LanguagePackManager.Core.Repositories;
+@using Connect.LanguagePackManager.Presentation.Common;
+@using System.Linq;
+@{
+  var packageVersionList = PackageVersionRepository.Instance.GetPackageVersions(Dnn.ModuleContext.ModuleId).Where(p => p.ContainedInPackageVersionId == null);
+  var packageList = packageVersionList.Select(p => p.FriendlyName).Distinct().OrderBy(p => p);
+}
+
+<h1>@Dnn.LocalizeString("LanguagePacks")</h1>
+
+@Html.DropDownList("localeSelector", (System.Web.Mvc.SelectList)ViewBag.LocaleCode, String.Empty, new { onchange = "letsGo();" })
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Package</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var packageName in packageList)
+    {
+      <tr>
+        <td>@packageName</td>
+        <td>
+          @foreach (var version in packageVersionList.Where(p => p.FriendlyName == packageName).OrderBy(p => p.Version))
+          {
+            <a href="@(Request.Url.Scheme)://@(Dnn.PortalSettings.PortalAlias.HTTPAlias)/API/Connect/LanguagePackManager/Packs/Get?packageName=@(version.PackageName)&version=@(version.Version)&locale=@ViewBag.Locale">@version.Version</a>
+          }
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<div>
+  <a href="@Url.Action("Upload", "Packs")" class="dnnSecondaryAction">@Dnn.LocalizeString("Upload")</a>
+</div>
+
+<script>
+  var letsGo = function () {
+    var newLocale = document.getElementById("localeSelector").value;
+    window.location.search = 'locale=' + newLocale;
+  }
+</script>

@@ -120,4 +120,7 @@
   <data name="Links.Text" xml:space="preserve">
     <value>Package Links</value>
   </data>
+  <data name="Packs.Text" xml:space="preserve">
+    <value>Packs</value>
+  </data>
 </root>

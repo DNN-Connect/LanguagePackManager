@@ -1,6 +1,5 @@
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Connect.LanguagePackManager.Core.Common;
 using Connect.LanguagePackManager.Core.Data;
@@ -13,6 +12,25 @@ namespace Connect.LanguagePackManager.Presentation.Controllers
 {
     public class PacksController : LanguagePackManagerMvcController
     {
+        [HttpGet]
+        public ActionResult Index(string locale)
+        {
+            var knownGenericLocales = LocaleRepository.Instance.GetLocales().Where(l => l.Code.Length == 2).Select(l => l.Code).ToList();
+            var locales = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
+                .Where(l => knownGenericLocales.Contains(l.TwoLetterISOLanguageName));
+            if (string.IsNullOrEmpty(locale))
+            {
+                if (locales.Count() > 0)
+                {
+                    locale = locales.First().Name;
+                }
+            }
+            ViewBag.LocaleCode = new SelectList(locales, "Name", "EnglishName", locale);
+            ViewBag.Locale = locale;
+
+            return View();
+        }
+
         [HttpGet]
         public ActionResult Upload()
         {

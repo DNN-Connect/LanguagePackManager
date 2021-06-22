@@ -34,12 +34,22 @@ namespace Connect.LanguagePackManager.Core.Repositories
                     packageVersionId);
             }
         }
+        public IEnumerable<PackageVersion> GetPackageVersions(int moduleId)
+        {
+            using (var context = DataContext.Instance())
+            {
+                return context.ExecuteQuery<PackageVersion>(System.Data.CommandType.Text,
+                    "SELECT * FROM {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersions WHERE ModuleId=@0",
+                    moduleId);
+            }
+        }
     }
     public partial interface IPackageVersionRepository
     {
         PackageVersion GetNextVersion(int packageId, string version);
         PackageVersion GetPackageVersion(int portalId, string packageName, string version);
         IEnumerable<PackageVersion> GetChildPackageVersions(int packageVersionId);
+        IEnumerable<PackageVersion> GetPackageVersions(int moduleId);
     }
 }
 

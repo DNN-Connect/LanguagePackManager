@@ -1,6 +1,7 @@
 using DotNetNuke.Data;
 using DotNetNuke.Framework;
 using Connect.LanguagePackManager.Core.Models.Packages;
+using System.Collections.Generic;
 
 namespace Connect.LanguagePackManager.Core.Repositories
 {
@@ -25,11 +26,22 @@ namespace Connect.LanguagePackManager.Core.Repositories
                     moduleId, packageName);
             }
         }
+
+        public IEnumerable<Package> GetPackages(int moduleId)
+        {
+            using (var context = DataContext.Instance())
+            {
+                return context.ExecuteQuery<Package>(System.Data.CommandType.Text,
+                    "SELECT TOP 1 * FROM {databaseOwner}{objectQualifier}vw_Connect_LPM_Packages WHERE ModuleId=@0",
+                    moduleId);
+            }
+        }
     }
     public partial interface IPackageRepository
     {
         Package FindPackage(int packageLinkId, string packageName);
         Package FindPackage(string packageName, int moduleId);
+        IEnumerable<Package> GetPackages(int moduleId);
     }
 }
 

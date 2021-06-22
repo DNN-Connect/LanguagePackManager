@@ -129,4 +129,7 @@
   <data name="Save.Text" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="Upload.Text" xml:space="preserve">
+    <value>Upload</value>
+  </data>
 </root>
