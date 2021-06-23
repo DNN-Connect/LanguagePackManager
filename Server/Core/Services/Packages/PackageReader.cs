@@ -25,9 +25,6 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
             this.PackageLinkId = packageLinkId;
             this.ParentPackageVersionId = parentPackageVersionId;
 
-            //Globals.CleanupTempDirs(homeDirectoryMapPath + "LocalizationEditor");
-
-            // Unzip file contents
             this.UnzipResult = ZipHelper.Unzip(zipFilePath, "", false);
 
             if (string.IsNullOrEmpty(UnzipResult.ManifestFile))

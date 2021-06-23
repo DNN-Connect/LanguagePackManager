@@ -269,7 +269,7 @@ SELECT
  pl.LastChecked,
  pl.ModuleId
 FROM {databaseOwner}{objectQualifier}Connect_LPM_Packages p
-INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageLinks pl ON p.LinkId=p.LinkId
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageLinks pl ON pl.PackageLinkId=p.LinkId
 GO
 
 IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersions'))
@@ -285,8 +285,9 @@ AS
 SELECT
  pv.*,
  p.PackageName,
+ p.FriendlyName,
  p.PackageType,
- pl.Name,
+ pl.Name PackageLinkName,
  pl.LastChecked,
  pl.ModuleId,
  m.PortalID
