@@ -1,10 +1,12 @@
 @inherits LanguagePackManagerWebPage
+@using Connect.LanguagePackManager.Core.Models.PackageVersionLocaleTextCounts;
 @using Connect.LanguagePackManager.Core.Repositories;
 @using Connect.LanguagePackManager.Presentation.Common;
 @using System.Linq;
 @{
   var packageVersionList = PackageVersionRepository.Instance.GetPackageVersions(Dnn.ModuleContext.ModuleId).Where(p => p.ContainedInPackageVersionId == null);
   var packageList = packageVersionList.Select(p => p.FriendlyName).Distinct().OrderBy(p => p);
+  var nrTexts = (IEnumerable<PackageVersionLocaleTextCount>)ViewBag.NrTexts;
 }
 
 <h1>@Dnn.LocalizeString("LanguagePacks")</h1>
@@ -26,7 +28,12 @@
         <td>
           @foreach (var version in packageVersionList.Where(p => p.FriendlyName == packageName).OrderBy(p => p.Version))
           {
+            var nrT = nrTexts.FirstOrDefault(t => t.PackageVersionId == version.PackageVersionId);
             <a href="@(Request.Url.Scheme)://@(Dnn.PortalSettings.PortalAlias.HTTPAlias)/API/Connect/LanguagePackManager/Packs/Get?packageName=@(version.PackageName)&version=@(version.Version)&locale=@ViewBag.Locale">@version.Version</a>
+            if (nrT != null)
+            {
+              <span>@nrT.NrTexts of @version.NrTexts</span>
+            }
           }
         </td>
       </tr>

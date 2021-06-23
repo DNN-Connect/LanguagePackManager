@@ -30,6 +30,8 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
         public DateTime ReleaseDate { get; set; }
         [DataMember]
         public DateTime Downloaded { get; set; }
+        [DataMember]
+        public int? NrTexts { get; set; }
         #endregion
 
         #region Methods
@@ -50,6 +52,9 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
             ReleaseDate = packageVersion.ReleaseDate;
 
             Downloaded = packageVersion.Downloaded;
+
+            if (packageVersion.NrTexts > -1)
+                NrTexts = packageVersion.NrTexts;
 
         }
         #endregion

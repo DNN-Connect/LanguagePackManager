@@ -21,6 +21,7 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
    Version = Convert.ToString(Null.SetNull(dr["Version"], Version));
    ReleaseDate = (DateTime)(Null.SetNull(dr["ReleaseDate"], ReleaseDate));
    Downloaded = (DateTime)(Null.SetNull(dr["Downloaded"], Downloaded));
+   NrTexts = Convert.ToInt32(Null.SetNull(dr["NrTexts"], NrTexts));
         }
 
         [IgnoreColumn()]
@@ -52,6 +53,12 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
      return ReleaseDate.ToString(strFormat, formatProvider);
     case "downloaded": // DateTime
      return Downloaded.ToString(strFormat, formatProvider);
+    case "nrtexts": // Int
+     if (NrTexts == null)
+     {
+         return "";
+     };
+     return ((int)NrTexts).ToString(strFormat, formatProvider);
                 default:
                     propertyNotFound = true;
                     break;

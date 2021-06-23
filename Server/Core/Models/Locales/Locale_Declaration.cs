@@ -22,6 +22,8 @@ namespace Connect.LanguagePackManager.Core.Models.Locales
         public int LocaleId { get; set; }
         [DataMember]
         public string Code { get; set; }
+        [DataMember]
+        public int? GenericLocaleId { get; set; }
         #endregion
 
         #region Methods
@@ -32,6 +34,9 @@ namespace Connect.LanguagePackManager.Core.Models.Locales
 
             if (!String.IsNullOrEmpty(locale.Code))
                 Code = locale.Code;
+
+            if (locale.GenericLocaleId > -1)
+                GenericLocaleId = locale.GenericLocaleId;
 
         }
         #endregion

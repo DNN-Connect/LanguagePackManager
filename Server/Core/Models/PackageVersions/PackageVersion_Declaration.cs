@@ -44,6 +44,7 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
              res.Version = Version;
              res.ReleaseDate = ReleaseDate;
              res.Downloaded = Downloaded;
+             res.NrTexts = NrTexts;
             return res;
         }
         public PackageVersion Clone()
@@ -55,6 +56,7 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
             res.Version = Version;
             res.ReleaseDate = ReleaseDate;
             res.Downloaded = Downloaded;
+            res.NrTexts = NrTexts;
             res.PackageName = PackageName;
             res.FriendlyName = FriendlyName;
             res.PackageType = PackageType;

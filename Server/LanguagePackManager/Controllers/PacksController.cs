@@ -25,8 +25,13 @@ namespace Connect.LanguagePackManager.Presentation.Controllers
                     locale = locales.First().Name;
                 }
             }
+
+            var loc = LocaleRepository.Instance.GetOrCreateLocale(locale);
+            var nrTexts = PackageVersionLocaleTextCountRepository.Instance.GetPackageVersionLocaleTextCounts(loc.LocaleId);
+
             ViewBag.LocaleCode = new SelectList(locales, "Name", "EnglishName", locale);
             ViewBag.Locale = locale;
+            ViewBag.NrTexts = nrTexts;
 
             return View();
         }

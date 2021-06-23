@@ -21,7 +21,9 @@ namespace Connect.LanguagePackManager.Core
         {
             try
             {
+                AddLogLine($"Cleaning up temp folder");
                 Common.Globals.CleanupTempFolder();
+
                 var links = PackageLinkRepository.Instance.GetPackageLinks();
                 foreach (var link in links)
                 {
@@ -29,6 +31,10 @@ namespace Connect.LanguagePackManager.Core
                     GithubController.CheckPackage(link);
                     AddLogLine($"Finished checking {link.Name}");
                 }
+
+                Data.Sprocs.RefreshNrTexts();
+                AddLogLine($"Refreshed Nr Texts");
+
                 ScheduleHistoryItem.Succeeded = true;
                 ScheduleHistoryItem.AddLogNote(Log.ToString().Replace(Environment.NewLine, "<br />"));
             }

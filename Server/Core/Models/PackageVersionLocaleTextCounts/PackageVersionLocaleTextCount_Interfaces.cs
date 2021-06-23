@@ -6,25 +6,25 @@ using DotNetNuke.ComponentModel.DataAnnotations;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Tokens;
 
-namespace Connect.LanguagePackManager.Core.Models.Locales
+namespace Connect.LanguagePackManager.Core.Models.PackageVersionLocaleTextCounts
 {
-    public partial class Locale : IHydratable, IPropertyAccess
+    public partial class PackageVersionLocaleTextCount : IHydratable, IPropertyAccess
     {
 
         #region IHydratable
 
         public virtual void Fill(IDataReader dr)
         {
+   PackageVersionId = Convert.ToInt32(Null.SetNull(dr["PackageVersionId"], PackageVersionId));
    LocaleId = Convert.ToInt32(Null.SetNull(dr["LocaleId"], LocaleId));
-   Code = Convert.ToString(Null.SetNull(dr["Code"], Code));
-   GenericLocaleId = Convert.ToInt32(Null.SetNull(dr["GenericLocaleId"], GenericLocaleId));
+   NrTexts = Convert.ToInt32(Null.SetNull(dr["NrTexts"], NrTexts));
         }
 
         [IgnoreColumn()]
         public int KeyID
         {
-            get { return LocaleId; }
-            set { LocaleId = value; }
+            get { return Null.NullInteger; }
+            set { }
         }
         #endregion
 
@@ -33,16 +33,12 @@ namespace Connect.LanguagePackManager.Core.Models.Locales
         {
             switch (strPropertyName.ToLower())
             {
+    case "packageversionid": // Int
+     return PackageVersionId.ToString(strFormat, formatProvider);
     case "localeid": // Int
      return LocaleId.ToString(strFormat, formatProvider);
-    case "code": // VarChar
-     return PropertyAccess.FormatString(Code, strFormat);
-    case "genericlocaleid": // Int
-     if (GenericLocaleId == null)
-     {
-         return "";
-     };
-     return ((int)GenericLocaleId).ToString(strFormat, formatProvider);
+    case "nrtexts": // Int
+     return NrTexts.ToString(strFormat, formatProvider);
                 default:
                     propertyNotFound = true;
                     break;
