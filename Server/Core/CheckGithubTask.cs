@@ -21,6 +21,7 @@ namespace Connect.LanguagePackManager.Core
         {
             try
             {
+                Common.Globals.CleanupTempFolder();
                 var links = PackageLinkRepository.Instance.GetPackageLinks();
                 foreach (var link in links)
                 {

@@ -25,6 +25,24 @@ namespace Connect.LanguagePackManager.Core.Common
             return res;
         }
 
+        public static void CleanupTempFolder()
+        {
+            var tempFolder = new DirectoryInfo(GetLpmFolder(-1, "Temp"));
+            if (tempFolder.Exists)
+            {
+                foreach (var dir in tempFolder.GetDirectories())
+                {
+                    try
+                    {
+                        dir.Delete(true);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
+            }
+        }
+
         public static Version GetAssemblyVersion(string path)
         {
             try
