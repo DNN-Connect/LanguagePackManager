@@ -1,7 +1,6 @@
 import * as React from "react";
 import { IAppModule } from "../../Models/IAppModule";
-import { IPackageVersion } from "../../Models/IPackageVersion";
-import { IPackageVersionLocaleTextCount } from "../../Models/IPackageVersionLocaleTextCount";
+import PackageTable from "./PackageTable";
 
 interface IPacksPageProps {
   module: IAppModule;
@@ -14,8 +13,6 @@ interface IPacksPageState {
   selectedPackage: number;
   selectedGenLocale: string;
   selectedLocale: string;
-  packageVersions: IPackageVersion[];
-  textStats: IPackageVersionLocaleTextCount[];
 }
 
 export default class PacksPage extends React.Component<
@@ -33,10 +30,7 @@ export default class PacksPage extends React.Component<
           : this.findBestLocale(props.genlocales[0].Key),
       selectedPackage:
         props.packages.length === 0 ? -1 : parseInt(props.packages[0].Key),
-      packageVersions: [],
-      textStats: [],
     };
-    this.packageChanged();
   }
 
   private findBestLocale(genLocale: string): string {
@@ -50,34 +44,6 @@ export default class PacksPage extends React.Component<
     )[0].Key;
   }
 
-  private packageChanged(): void {
-    this.props.module.service.getPackVersions(
-      this.state.selectedPackage,
-      (data) => {
-        this.setState(
-          {
-            packageVersions: data,
-          },
-          () => {
-            this.localeChanged();
-          }
-        );
-      }
-    );
-  }
-
-  private localeChanged(): void {
-    this.props.module.service.getTextStats(
-      this.state.selectedPackage,
-      this.state.selectedLocale,
-      (data) => {
-        this.setState({
-          textStats: data,
-        });
-      }
-    );
-  }
-
   public render(): JSX.Element {
     return (
       <div>
@@ -85,13 +51,10 @@ export default class PacksPage extends React.Component<
           <select
             value={this.state.selectedGenLocale}
             onChange={(e) =>
-              this.setState(
-                {
-                  selectedGenLocale: e.target.value,
-                  selectedLocale: this.findBestLocale(e.target.value),
-                },
-                () => this.localeChanged()
-              )
+              this.setState({
+                selectedGenLocale: e.target.value,
+                selectedLocale: this.findBestLocale(e.target.value),
+              })
             }
           >
             {this.props.genlocales.map((l) => (
@@ -104,11 +67,7 @@ export default class PacksPage extends React.Component<
         <div>
           <select
             value={this.state.selectedLocale}
-            onChange={(e) =>
-              this.setState({ selectedLocale: e.target.value }, () =>
-                this.localeChanged()
-              )
-            }
+            onChange={(e) => this.setState({ selectedLocale: e.target.value })}
           >
             {this.props.locales
               .filter((l) => l.Key.startsWith(this.state.selectedGenLocale))
@@ -123,9 +82,7 @@ export default class PacksPage extends React.Component<
           <select
             value={this.state.selectedPackage}
             onChange={(e) =>
-              this.setState({ selectedPackage: parseInt(e.target.value) }, () =>
-                this.packageChanged()
-              )
+              this.setState({ selectedPackage: parseInt(e.target.value) })
             }
           >
             {this.props.packages.map((p) => (
@@ -135,6 +92,11 @@ export default class PacksPage extends React.Component<
             ))}
           </select>
         </div>
+        <PackageTable
+          module={this.props.module}
+          packageId={this.state.selectedPackage}
+          locale={this.state.selectedLocale}
+        />
       </div>
     );
   }
