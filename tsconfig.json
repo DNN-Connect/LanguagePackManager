@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+      "sourceMap": true,
+      "target": "es5",
+      "jsx": "react",
+      "module": "es6",
+      "moduleResolution": "node",
+      "experimentalDecorators": true,
+      "declaration": false,
+      "removeComments": true,
+      "noImplicitReturns": true,
+      "noImplicitAny": false,
+      "noUnusedLocals": false,
+      "strict": true,
+      "strictPropertyInitialization": false,
+      "outDir": "build",
+      "lib": ["es6", "es7", "dom"]
+    },
+    "include": ["./Client/**/*.ts", "./Client/**/*.tsx", "./Client/Js/Common/mytypes.d.ts"],
+    "exclude": ["build", "node_modules", "_Development"]
+  }
+  

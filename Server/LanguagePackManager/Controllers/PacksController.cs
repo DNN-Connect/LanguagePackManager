@@ -15,24 +15,6 @@ namespace Connect.LanguagePackManager.Presentation.Controllers
         [HttpGet]
         public ActionResult Index(string locale)
         {
-            var knownGenericLocales = LocaleRepository.Instance.GetLocales().Where(l => l.Code.Length == 2).Select(l => l.Code).ToList();
-            var locales = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
-                .Where(l => knownGenericLocales.Contains(l.TwoLetterISOLanguageName));
-            if (string.IsNullOrEmpty(locale))
-            {
-                if (locales.Count() > 0)
-                {
-                    locale = locales.First().Name;
-                }
-            }
-
-            var loc = LocaleRepository.Instance.GetOrCreateLocale(locale);
-            var nrTexts = PackageVersionLocaleTextCountRepository.Instance.GetPackageVersionLocaleTextCounts(loc.LocaleId);
-
-            ViewBag.LocaleCode = new SelectList(locales, "Name", "EnglishName", locale);
-            ViewBag.Locale = locale;
-            ViewBag.NrTexts = nrTexts;
-
             return View();
         }
 

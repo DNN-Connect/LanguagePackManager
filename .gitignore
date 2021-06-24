@@ -5,3 +5,4 @@ _Development
 local.json
 node_modules
 Releases
+Server/LanguagePackManager/js/lpmanager.js

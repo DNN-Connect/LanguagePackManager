@@ -19,11 +19,11 @@ namespace Connect.LanguagePackManager.Core.Repositories
             using (var context = DataContext.Instance())
             {
                 return context.ExecuteSingleOrDefault<PackageVersionLocaleTextCount>(System.Data.CommandType.Text,
-                    "SELECT * FROM {databaseOwner}{objectQualifier}Connect_LPM_PackageVersionLocaleTextCounts WHERE PackageVersionId=@0 AND LocaleId=@1",
+                    "SELECT * FROM {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersionLocaleTextCounts WHERE PackageVersionId=@0 AND LocaleId=@1",
                     packageVersionId,localeId);
             }
         }
-        public void AddPackageVersionLocaleTextCount(PackageVersionLocaleTextCount packageVersionLocaleTextCount)
+        public void AddPackageVersionLocaleTextCount(PackageVersionLocaleTextCountBase packageVersionLocaleTextCount)
         {
             Requires.NotNull(packageVersionLocaleTextCount);
             using (var context = DataContext.Instance())
@@ -35,7 +35,7 @@ namespace Connect.LanguagePackManager.Core.Repositories
                     "SELECT @0, @1, @2", packageVersionLocaleTextCount.PackageVersionId, packageVersionLocaleTextCount.LocaleId, packageVersionLocaleTextCount.NrTexts);
             }
         }
-        public void DeletePackageVersionLocaleTextCount(PackageVersionLocaleTextCount packageVersionLocaleTextCount)
+        public void DeletePackageVersionLocaleTextCount(PackageVersionLocaleTextCountBase packageVersionLocaleTextCount)
         {
             DeletePackageVersionLocaleTextCount(packageVersionLocaleTextCount.PackageVersionId, packageVersionLocaleTextCount.LocaleId);
         }
@@ -48,12 +48,12 @@ namespace Connect.LanguagePackManager.Core.Repositories
                     packageVersionId,localeId);
             }
         }
-        public void UpdatePackageVersionLocaleTextCount(PackageVersionLocaleTextCount packageVersionLocaleTextCount)
+        public void UpdatePackageVersionLocaleTextCount(PackageVersionLocaleTextCountBase packageVersionLocaleTextCount)
         {
             Requires.NotNull(packageVersionLocaleTextCount);
             using (var context = DataContext.Instance())
             {
-                var rep = context.GetRepository<PackageVersionLocaleTextCount>();
+                var rep = context.GetRepository<PackageVersionLocaleTextCountBase>();
                 rep.Update("SET NrTexts=@0 WHERE PackageVersionId=@1 AND LocaleId=@2",
                           packageVersionLocaleTextCount.NrTexts, packageVersionLocaleTextCount.PackageVersionId,packageVersionLocaleTextCount.LocaleId);
             }
@@ -63,10 +63,10 @@ namespace Connect.LanguagePackManager.Core.Repositories
     public partial interface IPackageVersionLocaleTextCountRepository
     {
         PackageVersionLocaleTextCount GetPackageVersionLocaleTextCount(int packageVersionId, int localeId);
-        void AddPackageVersionLocaleTextCount(PackageVersionLocaleTextCount packageVersionLocaleTextCount);
-        void DeletePackageVersionLocaleTextCount(PackageVersionLocaleTextCount packageVersionLocaleTextCount);
+        void AddPackageVersionLocaleTextCount(PackageVersionLocaleTextCountBase packageVersionLocaleTextCount);
+        void DeletePackageVersionLocaleTextCount(PackageVersionLocaleTextCountBase packageVersionLocaleTextCount);
         void DeletePackageVersionLocaleTextCount(int packageVersionId, int localeId);
-        void UpdatePackageVersionLocaleTextCount(PackageVersionLocaleTextCount packageVersionLocaleTextCount);
+        void UpdatePackageVersionLocaleTextCount(PackageVersionLocaleTextCountBase packageVersionLocaleTextCount);
     }
 }
 

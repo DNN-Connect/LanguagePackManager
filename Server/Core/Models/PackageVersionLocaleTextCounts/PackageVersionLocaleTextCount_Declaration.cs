@@ -1,46 +1,48 @@
 using System;
 using System.Runtime.Serialization;
 using DotNetNuke.ComponentModel.DataAnnotations;
-using Connect.LanguagePackManager.Core.Data;
 
 namespace Connect.LanguagePackManager.Core.Models.PackageVersionLocaleTextCounts
 {
-    [TableName("Connect_LPM_PackageVersionLocaleTextCounts")]
+
+    [TableName("vw_Connect_LPM_PackageVersionLocaleTextCounts")]
     [DataContract]
-    public partial class PackageVersionLocaleTextCount     {
+    public partial class PackageVersionLocaleTextCount  : PackageVersionLocaleTextCountBase 
+    {
 
         #region .ctor
-        public PackageVersionLocaleTextCount()
+        public PackageVersionLocaleTextCount()  : base() 
         {
         }
         #endregion
 
         #region Properties
         [DataMember]
-        public int PackageVersionId { get; set; }
+        public int? OriginalNr { get; set; }
         [DataMember]
-        public int LocaleId { get; set; }
-        [DataMember]
-        public int NrTexts { get; set; }
+        public int PackageId { get; set; }
         #endregion
 
         #region Methods
-        public void ReadPackageVersionLocaleTextCount(PackageVersionLocaleTextCount packageVersionLocaleTextCount)
+        public PackageVersionLocaleTextCountBase GetPackageVersionLocaleTextCountBase()
         {
-            if (packageVersionLocaleTextCount.PackageVersionId > -1)
-                PackageVersionId = packageVersionLocaleTextCount.PackageVersionId;
-
-            if (packageVersionLocaleTextCount.LocaleId > -1)
-                LocaleId = packageVersionLocaleTextCount.LocaleId;
-
-            if (packageVersionLocaleTextCount.NrTexts > -1)
-                NrTexts = packageVersionLocaleTextCount.NrTexts;
-
+            PackageVersionLocaleTextCountBase res = new PackageVersionLocaleTextCountBase();
+             res.PackageVersionId = PackageVersionId;
+             res.LocaleId = LocaleId;
+             res.NrTexts = NrTexts;
+            return res;
+        }
+        public PackageVersionLocaleTextCount Clone()
+        {
+            PackageVersionLocaleTextCount res = new PackageVersionLocaleTextCount();
+            res.PackageVersionId = PackageVersionId;
+            res.LocaleId = LocaleId;
+            res.NrTexts = NrTexts;
+            res.OriginalNr = OriginalNr;
+            res.PackageId = PackageId;
+            return res;
         }
         #endregion
 
     }
 }
-
-
-

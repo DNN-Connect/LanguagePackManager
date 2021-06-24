@@ -12,7 +12,7 @@ namespace Connect.LanguagePackManager.Core.Repositories
             using (var context = DataContext.Instance())
             {
                 return context.ExecuteQuery<PackageVersionLocaleTextCount>(System.Data.CommandType.Text,
-                    "SELECT * FROM {databaseOwner}{objectQualifier}Connect_LPM_PackageVersionLocaleTextCounts WHERE LocaleId=@0",
+                    "SELECT * FROM {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersionLocaleTextCounts WHERE LocaleId=@0",
                     localeId);
             }
         }

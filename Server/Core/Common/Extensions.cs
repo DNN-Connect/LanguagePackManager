@@ -82,5 +82,21 @@ namespace Connect.LanguagePackManager.Core.Common
                 }
             }
         }
+
+        public static string ParseRegion(this System.Globalization.CultureInfo input)
+        {
+            if (input.IsNeutralCulture) return input.EnglishName;
+            var m = Regex.Match(input.EnglishName, @"\((.+)\)");
+            if (m.Success)
+            {
+                var region = m.Groups[1].Value;
+                if (region.IndexOf(",") > 0)
+                {
+                    region = region.Substring(region.IndexOf(",") + 2);
+                }
+                return region;
+            }
+            return input.EnglishName;
+        }
     }
 }

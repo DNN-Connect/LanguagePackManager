@@ -1,53 +1,34 @@
 @inherits LanguagePackManagerWebPage
-@using Connect.LanguagePackManager.Core.Models.PackageVersionLocaleTextCounts;
+@using Connect.LanguagePackManager.Core.Common;
 @using Connect.LanguagePackManager.Core.Repositories;
 @using Connect.LanguagePackManager.Presentation.Common;
 @using System.Linq;
 @{
-  var packageVersionList = PackageVersionRepository.Instance.GetPackageVersions(Dnn.ModuleContext.ModuleId).Where(p => p.ContainedInPackageVersionId == null);
-  var packageList = packageVersionList.Select(p => p.FriendlyName).Distinct().OrderBy(p => p);
-  var nrTexts = (IEnumerable<PackageVersionLocaleTextCount>)ViewBag.NrTexts;
+  LanguagePackManagerModuleContext.AddModuleScript();
+  var knownGenericLocales = LocaleRepository.Instance.GetLocales().Where(l => l.Code.Length == 2).Select(l => l.Code).ToList();
+  var locales = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
+      .Where(l => knownGenericLocales.Contains(l.TwoLetterISOLanguageName))
+      .Select(l => new { Key = l.Name, Value = l.ParseRegion() });
+  var genlocales = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.NeutralCultures)
+    .Where(l => knownGenericLocales.Contains(l.TwoLetterISOLanguageName))
+    .Select(l => new { Key = l.Name, Value = l.EnglishName });
+  var packageList = PackageVersionRepository.Instance.GetPackageVersions(Dnn.ModuleContext.ModuleId)
+      .Where(p => p.ContainedInPackageVersionId == null)
+      .Select(p => new { Key = p.PackageId, Value = p.FriendlyName })
+      .Distinct()
+      .OrderBy(p => p.Value);
 }
 
 <h1>@Dnn.LocalizeString("LanguagePacks")</h1>
 
-@Html.DropDownList("localeSelector", (System.Web.Mvc.SelectList)ViewBag.LocaleCode, String.Empty, new { onchange = "letsGo();" })
-
-<table class="table">
-  <thead>
-    <tr>
-      <th>Package</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    @foreach (var packageName in packageList)
-    {
-      <tr>
-        <td>@packageName</td>
-        <td>
-          @foreach (var version in packageVersionList.Where(p => p.FriendlyName == packageName).OrderBy(p => p.Version))
-          {
-            var nrT = nrTexts.FirstOrDefault(t => t.PackageVersionId == version.PackageVersionId);
-            <a href="@(Request.Url.Scheme)://@(Dnn.PortalSettings.PortalAlias.HTTPAlias)/API/Connect/LanguagePackManager/Packs/Get?packageName=@(version.PackageName)&version=@(version.Version)&locale=@ViewBag.Locale">@version.Version</a>
-            if (nrT != null)
-            {
-              <span>@nrT.NrTexts of @version.NrTexts</span>
-            }
-          }
-        </td>
-      </tr>
-    }
-  </tbody>
-</table>
-
-<div>
-  <a href="@Url.Action("Upload", "Packs")" class="dnnSecondaryAction">@Dnn.LocalizeString("Upload")</a>
+<div class="connectlpm packs"
+     data-locale="@System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName"
+     data-moduleid="@Dnn.ActiveModule.ModuleID"
+     data-tabid="@Dnn.ActiveModule.TabID"
+     data-portalid="@Dnn.PortalSettings.PortalId"
+     data-resources="@SerializedResources()"
+     data-security="@(Newtonsoft.Json.JsonConvert.SerializeObject(LanguagePackManagerModuleContext.Security))"
+     data-genlocales="@(Newtonsoft.Json.JsonConvert.SerializeObject(genlocales))"
+     data-locales="@(Newtonsoft.Json.JsonConvert.SerializeObject(locales))"
+     data-packages="@(Newtonsoft.Json.JsonConvert.SerializeObject(packageList))">
 </div>
-
-<script>
-  var letsGo = function () {
-    var newLocale = document.getElementById("localeSelector").value;
-    window.location.search = 'locale=' + newLocale;
-  }
-</script>

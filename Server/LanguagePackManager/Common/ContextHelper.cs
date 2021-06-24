@@ -23,7 +23,7 @@ namespace Connect.LanguagePackManager.Presentation.Common
         {
             get
             {
-                return "~/DesktopModules/MVC/DNN Connect/LanguagePackManager";
+                return "~/DesktopModules/MVC/Connect/LanguagePackManager";
             }
         }
 
@@ -114,7 +114,7 @@ namespace Connect.LanguagePackManager.Presentation.Common
         }
         public void AddModuleScript()
         {
-            AddModuleScript("languagepackmanager");
+            AddModuleScript("lpmanager");
         }
 
         public void ThrowAccessViolation()

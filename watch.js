@@ -4,7 +4,7 @@ const chokidar = require("chokidar"),
   deepmerge = require("deepmerge");
 
 var pkg = require("./package.json"),
-  pkgLPM = require("./Server/LanguagePackManager/dnn.json");
+  pkgLanguagePackManager = require("./Server/LanguagePackManager/dnn.json");
 if (fs.existsSync("./local.json")) {
   var local = require("./local.json");
   pkg = deepmerge(pkg, local);
@@ -32,35 +32,35 @@ var ignore = [
   "**/*.??proj",
   "**/web*.config",
   "**/packages.config",
-  "**/.*",
+  "**/.*"
 ];
 
-const allDlls = pkgLPM.pathsAndFiles.assemblies
-//   .concat(pkgSsrsModule.pathsAndFiles.assemblies)
-  .map((dll) => "bin/" + dll);
+const allDlls = pkgLanguagePackManager.pathsAndFiles.assemblies
+  // .concat(pkgLanguagePackManager.pathsAndFiles.assemblies)
+  .map(dll => "bin/" + dll);
 
 const watcher = (src, dest) =>
   chokidar
     .watch(src, {
       ignored: ignore,
-      persistent: true,
+      persistent: true
     })
-    .on("add", (path) => copy(src, path, dest))
-    .on("change", (path) => copy(src, path, dest));
+    .on("add", path => copy(src, path, dest))
+    .on("change", path => copy(src, path, dest));
 // Todo: delete events?
 
 // Initialize watchers.
-const LpmWatcher = watcher(
+const LanguagePackManagerWatcher = watcher(
   "Server/LanguagePackManager",
   pkg.dnn.pathsAndFiles.devSitePath +
-    "DesktopModules\\MVC\\Connect\\LanguagePackManager"
+    "\\DesktopModules\\MVC\\Connect\\LanguagePackManager"
 );
 
 const DllWatcher = chokidar
   .watch(allDlls, {
-    persistent: true,
+    persistent: true
   })
-  .on("add", (path) => {
+  .on("add", path => {
     copy("bin", path, pkg.dnn.pathsAndFiles.devSitePath + "\\bin");
     copy(
       "bin",
@@ -68,7 +68,7 @@ const DllWatcher = chokidar
       pkg.dnn.pathsAndFiles.devSitePath + "\\bin"
     );
   })
-  .on("change", (path) => {
+  .on("change", path => {
     copy("bin", path, pkg.dnn.pathsAndFiles.devSitePath + "\\bin");
     copy(
       "bin",
