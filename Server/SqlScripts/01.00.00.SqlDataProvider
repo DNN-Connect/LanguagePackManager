@@ -292,6 +292,24 @@ FROM {databaseOwner}{objectQualifier}Connect_LPM_Packages p
 INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageLinks pl ON pl.PackageLinkId=p.LinkId
 GO
 
+IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersionLocaleTextCounts'))
+DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersionLocaleTextCounts
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersionLocaleTextCounts
+AS
+SELECT
+tc.*,
+pv.NrTexts OriginalNr,
+pv.PackageId
+FROM {databaseOwner}{objectQualifier}Connect_LPM_PackageVersionLocaleTextCounts tc
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageVersions pv ON pv.PackageVersionId=tc.PackageVersionId
+GO
+
 IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersions'))
 DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersions
 GO

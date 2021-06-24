@@ -32,6 +32,10 @@ IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner
 DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_Packages
 GO
 
+IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersionLocaleTextCounts'))
+DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersionLocaleTextCounts
+GO
+
 IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersions'))
 DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersions
 GO
