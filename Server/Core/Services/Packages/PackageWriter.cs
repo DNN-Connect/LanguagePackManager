@@ -11,7 +11,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
 {
     public class PackageWriter
     {
-        public static string CreateResourcePack(int portalId, string packageName, string version, string locale, bool isFullPack)
+        public static string CreateResourcePack(int portalId, string packageName, string version, string locale)
         {
             string fileName = "";
 
@@ -24,12 +24,9 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
             var packageList = new List<PackageVersion>();
             packageList.Add(packageVersion);
 
-            if (isFullPack)
+            foreach (var pv in PackageVersionRepository.Instance.GetChildPackageVersions(packageVersion.PackageVersionId))
             {
-                foreach (var pv in PackageVersionRepository.Instance.GetChildPackageVersions(packageVersion.PackageVersionId))
-                {
-                    packageList.Add(pv);
-                }
+                packageList.Add(pv);
             }
 
             var localeChain = LocaleRepository.Instance.GetLocaleChain(locale).ToList();
@@ -44,9 +41,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                 specificLocaleId = localeChain[1].LocaleId;
             }
 
-            fileName = $"ResourcePack.{CleanName(packageName)}.{version}.{locale}";
-            fileName += isFullPack ? ".full" : "";
-            fileName += ".zip";
+            fileName = $"ResourcePack.{CleanName(packageName)}.{version}.{locale}.zip";
             string packPath = Common.Globals.GetLpmFolder(portalId, "Cache") + @"\";
 
             // check for caching

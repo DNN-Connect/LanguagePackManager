@@ -16,10 +16,10 @@ namespace Connect.LanguagePackManager.Presentation.Api
     {
         [HttpGet]
         [AllowAnonymous]
-        public HttpResponseMessage Get(string packageName, string version, string locale, bool full = true)
+        public HttpResponseMessage Get(string packageName, string version, string locale)
         {
             version = version.ParseVersion().ToNormalizedFormat();
-            var packPath = PackageWriter.CreateResourcePack(PortalSettings.PortalId, packageName, version, locale, full);
+            var packPath = PackageWriter.CreateResourcePack(PortalSettings.PortalId, packageName, version, locale);
             if (string.IsNullOrEmpty(packPath))
             {
                 return ServiceError("Something went wrong");
