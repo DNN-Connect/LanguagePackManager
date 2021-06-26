@@ -65,6 +65,8 @@ export default class PackageTable extends React.Component<
     var rows = this.state.packageVersions.map((pv) => (
       <PackageVersionRow
         key={pv.PackageVersionId}
+        contextLocale={this.props.module.locale}
+        resources={this.props.module.resources}
         baseServicepath={this.props.module.service.baseServicepath}
         locale={this.props.locale}
         packageVersion={pv}
@@ -78,8 +80,9 @@ export default class PackageTable extends React.Component<
         <table className="table">
           <thead>
             <tr>
-              <th>Version</th>
-              <th>Stats</th>
+              <th>{this.props.module.resources.Version}</th>
+              <th>{this.props.module.resources.Stats}</th>
+              <th>{this.props.module.resources.Released}</th>
               <th></th>
             </tr>
           </thead>

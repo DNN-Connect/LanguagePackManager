@@ -1,6 +1,7 @@
 import * as React from "react";
 import { IAppModule } from "../../Models/IAppModule";
 import PackageTable from "./PackageTable";
+import styles from "./styles.module.css";
 
 interface IPacksPageProps {
   module: IAppModule;
@@ -47,50 +48,57 @@ export default class PacksPage extends React.Component<
   public render(): JSX.Element {
     return (
       <div>
-        <div>
-          <select
-            value={this.state.selectedGenLocale}
-            onChange={(e) =>
-              this.setState({
-                selectedGenLocale: e.target.value,
-                selectedLocale: this.findBestLocale(e.target.value),
-              })
-            }
-          >
-            {this.props.genlocales.map((l) => (
-              <option value={l.Key} key={l.Key}>
-                {l.Value}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <select
-            value={this.state.selectedLocale}
-            onChange={(e) => this.setState({ selectedLocale: e.target.value })}
-          >
-            {this.props.locales
-              .filter((l) => l.Key.startsWith(this.state.selectedGenLocale))
-              .map((l) => (
+        <div className={styles.page}>
+          <div className={styles.dddiv}>
+            <div>{this.props.module.resources.Language}</div>
+            <select
+              value={this.state.selectedGenLocale}
+              onChange={(e) =>
+                this.setState({
+                  selectedGenLocale: e.target.value,
+                  selectedLocale: this.findBestLocale(e.target.value),
+                })
+              }
+            >
+              {this.props.genlocales.map((l) => (
                 <option value={l.Key} key={l.Key}>
                   {l.Value}
                 </option>
               ))}
-          </select>
-        </div>
-        <div>
-          <select
-            value={this.state.selectedPackage}
-            onChange={(e) =>
-              this.setState({ selectedPackage: parseInt(e.target.value) })
-            }
-          >
-            {this.props.packages.map((p) => (
-              <option value={p.Key} key={p.Key}>
-                {p.Value}
-              </option>
-            ))}
-          </select>
+            </select>
+          </div>
+          <div className={styles.dddiv}>
+            <div>{this.props.module.resources.Region}</div>
+            <select
+              value={this.state.selectedLocale}
+              onChange={(e) =>
+                this.setState({ selectedLocale: e.target.value })
+              }
+            >
+              {this.props.locales
+                .filter((l) => l.Key.startsWith(this.state.selectedGenLocale))
+                .map((l) => (
+                  <option value={l.Key} key={l.Key}>
+                    {l.Value}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <div className={styles.dddiv}>
+            <div>{this.props.module.resources.Package}</div>
+            <select
+              value={this.state.selectedPackage}
+              onChange={(e) =>
+                this.setState({ selectedPackage: parseInt(e.target.value) })
+              }
+            >
+              {this.props.packages.map((p) => (
+                <option value={p.Key} key={p.Key}>
+                  {p.Value}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <PackageTable
           module={this.props.module}

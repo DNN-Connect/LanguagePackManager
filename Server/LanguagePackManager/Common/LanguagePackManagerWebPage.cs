@@ -20,7 +20,7 @@ namespace Connect.LanguagePackManager.Presentation.Common
 
         public string SerializedResources()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(DotNetNuke.Services.Localization.LocalizationProvider.Instance.GetCompiledResourceFile(Dnn.PortalSettings, "/DesktopModules/MVC/DNN Connect/LanguagePackManager/App_LocalResources/ClientResources.resx",
+            return Newtonsoft.Json.JsonConvert.SerializeObject(DotNetNuke.Services.Localization.LocalizationProvider.Instance.GetCompiledResourceFile(Dnn.PortalSettings, "/DesktopModules/MVC/Connect/LanguagePackManager/App_LocalResources/ClientResources.resx",
                     System.Threading.Thread.CurrentThread.CurrentCulture.Name));
         }
 

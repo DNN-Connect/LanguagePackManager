@@ -14,7 +14,8 @@
       "strict": true,
       "strictPropertyInitialization": false,
       "outDir": "build",
-      "lib": ["es6", "es7", "dom"]
+      "lib": ["es6", "es7", "dom"],
+      "plugins": [{ "name": "typescript-plugin-css-modules" }]
     },
     "include": ["./Client/**/*.ts", "./Client/**/*.tsx", "./Client/Js/Common/mytypes.d.ts"],
     "exclude": ["build", "node_modules", "_Development"]
