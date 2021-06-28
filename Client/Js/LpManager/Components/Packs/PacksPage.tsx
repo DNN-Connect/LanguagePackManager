@@ -1,4 +1,10 @@
 import * as React from "react";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { IAppModule } from "../../Models/IAppModule";
 import PackageTable from "./PackageTable";
 import styles from "./styles.module.css";
@@ -50,54 +56,73 @@ export default class PacksPage extends React.Component<
       <div>
         <div className={styles.page}>
           <div className={styles.dddiv}>
-            <div>{this.props.module.resources.Language}</div>
-            <select
-              value={this.state.selectedGenLocale}
-              onChange={(e) =>
-                this.setState({
-                  selectedGenLocale: e.target.value,
-                  selectedLocale: this.findBestLocale(e.target.value),
-                })
-              }
-            >
-              {this.props.genlocales.map((l) => (
-                <option value={l.Key} key={l.Key}>
-                  {l.Value}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className={styles.dddiv}>
-            <div>{this.props.module.resources.Region}</div>
-            <select
-              value={this.state.selectedLocale}
-              onChange={(e) =>
-                this.setState({ selectedLocale: e.target.value })
-              }
-            >
-              {this.props.locales
-                .filter((l) => l.Key.startsWith(this.state.selectedGenLocale))
-                .map((l) => (
-                  <option value={l.Key} key={l.Key}>
+            <FormControl style={{ minWidth: "200px" }}>
+              <Select
+                value={this.state.selectedGenLocale}
+                onChange={(e) =>
+                  this.setState({
+                    selectedGenLocale: e.target.value as string,
+                    selectedLocale: this.findBestLocale(
+                      e.target.value as string
+                    ),
+                  })
+                }
+                style={{ paddingRight: "32px" }}
+              >
+                {this.props.genlocales.map((l) => (
+                  <MenuItem value={l.Key} key={l.Key}>
                     {l.Value}
-                  </option>
+                  </MenuItem>
                 ))}
-            </select>
+              </Select>
+              <FormHelperText>
+                {this.props.module.resources.Language}
+              </FormHelperText>
+            </FormControl>
           </div>
           <div className={styles.dddiv}>
-            <div>{this.props.module.resources.Package}</div>
-            <select
-              value={this.state.selectedPackage}
-              onChange={(e) =>
-                this.setState({ selectedPackage: parseInt(e.target.value) })
-              }
-            >
-              {this.props.packages.map((p) => (
-                <option value={p.Key} key={p.Key}>
-                  {p.Value}
-                </option>
-              ))}
-            </select>
+            <FormControl style={{ minWidth: "200px" }}>
+              <Select
+                value={this.state.selectedLocale}
+                onChange={(e) =>
+                  this.setState({ selectedLocale: e.target.value as string })
+                }
+                style={{ paddingRight: "32px" }}
+              >
+                {this.props.locales
+                  .filter((l) => l.Key.startsWith(this.state.selectedGenLocale))
+                  .map((l) => (
+                    <MenuItem value={l.Key} key={l.Key}>
+                      {l.Value}
+                    </MenuItem>
+                  ))}
+              </Select>
+              <FormHelperText>
+                {this.props.module.resources.Region}
+              </FormHelperText>
+            </FormControl>
+          </div>
+          <div className={styles.dddiv}>
+            <FormControl style={{ minWidth: "200px" }}>
+              <Select
+                value={this.state.selectedPackage}
+                onChange={(e) =>
+                  this.setState({
+                    selectedPackage: parseInt(e.target.value as string),
+                  })
+                }
+                style={{ paddingRight: "32px" }}
+              >
+                {this.props.packages.map((p) => (
+                  <MenuItem value={p.Key} key={p.Key}>
+                    {p.Value}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>
+                {this.props.module.resources.Package}
+              </FormHelperText>
+            </FormControl>
           </div>
         </div>
         <PackageTable

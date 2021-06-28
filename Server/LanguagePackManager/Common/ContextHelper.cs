@@ -84,6 +84,11 @@ namespace Connect.LanguagePackManager.Presentation.Common
         {
             ClientResourceManager.RegisterStyleSheet(Page, string.Format(ModulePath + "/css/{0}", cssFile), 9);
         }
+        public void AddMaterialUICss()
+        {
+            ClientResourceManager.RegisterStyleSheet(Page, "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap", 9);
+            ClientResourceManager.RegisterStyleSheet(Page, "https://fonts.googleapis.com/icon?family=Material+Icons", 9);
+        }
 
         #endregion
 
