@@ -81,7 +81,9 @@ export default class PackageTable extends React.Component<
           <thead>
             <tr>
               <th>{this.props.module.resources.Version}</th>
-              <th>{this.props.module.resources.Stats}</th>
+              <th>
+                {this.props.module.resources.Stats} {this.props.locale}
+              </th>
               <th>{this.props.module.resources.Released}</th>
               <th></th>
             </tr>
