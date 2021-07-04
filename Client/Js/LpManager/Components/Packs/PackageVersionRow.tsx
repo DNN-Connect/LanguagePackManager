@@ -12,8 +12,10 @@ interface IPackageVersionRowProps {
 }
 
 const PackageVersionRow: React.FC<IPackageVersionRowProps> = (props) => {
-  var textStat =
-    props.textStat.length > 0 ? (
+  let textStat = <span></span>;
+  let hasTexts = false;
+  if (props.textStat.length > 0) {
+    textStat = (
       <span>
         {props.textStat[0].NrTexts}/{props.packageVersion.NrTexts} (
         {(
@@ -22,7 +24,11 @@ const PackageVersionRow: React.FC<IPackageVersionRowProps> = (props) => {
         ).toFixed(0)}{" "}
         %)
       </span>
-    ) : null;
+    );
+    if (props.textStat[0].NrTexts > 0) {
+      hasTexts = true;
+    }
+  }
   const date = new Date(props.packageVersion.ReleaseDate);
   return (
     <tr>
@@ -30,11 +36,13 @@ const PackageVersionRow: React.FC<IPackageVersionRowProps> = (props) => {
       <td>{textStat}</td>
       <td>{new Intl.DateTimeFormat(props.contextLocale).format(date)}</td>
       <td>
-        <a
-          href={`${props.baseServicepath}Packs/Get?packageName=${props.packageVersion.PackageName}&version=${props.packageVersion.Version}&locale=${props.locale}`}
-        >
-          {props.resources.Download}
-        </a>
+        {hasTexts ? (
+          <a
+            href={`${props.baseServicepath}Packs/Get?packageName=${props.packageVersion.PackageName}&version=${props.packageVersion.Version}&locale=${props.locale}`}
+          >
+            {props.resources.Download}
+          </a>
+        ) : null}
       </td>
     </tr>
   );
