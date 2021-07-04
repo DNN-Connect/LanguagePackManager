@@ -9,21 +9,24 @@ namespace Connect.LanguagePackManager.Presentation.Controllers
     public class LinksController : LanguagePackManagerMvcController
     {
         [HttpGet]
+        [LpmAuthorize(SecurityLevel = SecurityAccessLevel.Edit)]
         public ActionResult Index()
         {
             return View();
         }
 
         [HttpGet]
+        [LpmAuthorize(SecurityLevel = SecurityAccessLevel.Edit)]
         public ActionResult Edit(int linkId)
         {
             var link = PackageLinkRepository.Instance.GetPackageLink(ModuleContext.ModuleId, linkId);
-            if (link == null) link = new Core.Models.PackageLinks.PackageLink();
+            if (link == null) link = new PackageLink();
             return View(link);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [LpmAuthorize(SecurityLevel = SecurityAccessLevel.Edit)]
         public ActionResult Edit(int linkId, PackageLink link)
         {
             link.Name = link.Name.Trim();

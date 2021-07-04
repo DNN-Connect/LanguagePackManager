@@ -13,6 +13,7 @@ namespace Connect.LanguagePackManager.Presentation.Common
         public bool CanView { get; set; }
         public bool CanEdit { get; set; }
         public bool IsAdmin { get; set; }
+        public bool IsTranslator { get; set; }
         private UserInfo user { get; set; }
         public int UserId
         {
@@ -41,19 +42,20 @@ namespace Connect.LanguagePackManager.Presentation.Common
             this.user = user;
             if (user.IsSuperUser)
             {
-                CanView = CanEdit = IsAdmin = true;
+                CanView = CanEdit = IsAdmin = IsTranslator = true;
             }
             else
             {
                 IsAdmin = PortalSecurity.IsInRole(PortalSettings.Current.AdministratorRoleName);
                 if (IsAdmin)
                 {
-                    CanView = CanEdit = true;
+                    CanView = CanEdit = IsTranslator = true;
                 }
                 else
                 {
                     CanView = ModulePermissionController.CanViewModule(objModule);
                     CanEdit = ModulePermissionController.HasModulePermission(objModule.ModulePermissions, "EDIT");
+                    IsTranslator = ModulePermissionController.HasModulePermission(objModule.ModulePermissions, "TRANSLATOR");
                 }
             }
         }

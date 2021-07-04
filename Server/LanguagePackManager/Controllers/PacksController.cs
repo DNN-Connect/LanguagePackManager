@@ -13,12 +13,7 @@ namespace Connect.LanguagePackManager.Presentation.Controllers
     public class PacksController : LanguagePackManagerMvcController
     {
         [HttpGet]
-        public ActionResult Index(string locale)
-        {
-            return View();
-        }
-
-        [HttpGet]
+        [LpmAuthorize(SecurityLevel = SecurityAccessLevel.Translator)]
         public ActionResult Upload()
         {
             return View();
@@ -26,6 +21,7 @@ namespace Connect.LanguagePackManager.Presentation.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [LpmAuthorize(SecurityLevel = SecurityAccessLevel.Translator)]
         public ActionResult Upload(object data)
         {
             var generic = this.Request.Form["GenericLanguage"].OnOffToBool();
