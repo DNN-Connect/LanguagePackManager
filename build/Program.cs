@@ -35,7 +35,7 @@ public class BuildContext : FrostingContext
         this.Solution = Solution.New(".\\package.json");
         this.BuildSettings = new MSBuildSettings()
             .SetConfiguration("Release")
-            .UseToolVersion(MSBuildToolVersion.VS2019)
+            .UseToolVersion(MSBuildToolVersion.VS2022)
             .WithProperty("OutDir", new System.IO.DirectoryInfo(this.Solution.dnn.pathsAndFiles.pathToAssemblies).FullName);
     }
 }
@@ -51,6 +51,13 @@ public sealed class AssemblyInfoTask : FrostingTask<BuildContext>
         {
             context.Information("Updating Assembly: {0}", file);
             context.UpdateAssemblyInfo(context.Solution, file);
+        }
+        ptrn = new string[] { "./**/*.csproj" };
+        files = context.GetFilesByPatterns(ptrn, context.Solution.dnn.pathsAndFiles.excludeFilter);
+        foreach (var file in files)
+        {
+            context.Information("Updating Project File: {0}", file);
+            context.UpdateCsProjFile(context.Solution, file);
         }
     }
 }

@@ -7,11 +7,11 @@
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <Authors>Peter Donker</Authors>
     <Company>DNN Connect</Company>
-    <Product>Connect.LanguagePackManager.Presentation</Product>
-    <Copyright>2021</Copyright>
+    <Product>languagepackmanager</Product>
+    <Copyright>Copyright 2023 by DNN Connect</Copyright>
     <PackageId>Connect.LanguagePackManager.Presentation</PackageId>
-    <AssemblyVersion>0.0.1.0</AssemblyVersion>
-    <FileVersion>0.0.1.0</FileVersion>
+    <AssemblyVersion>1.0.1</AssemblyVersion>
+    <FileVersion>1.0.1</FileVersion>
     <Description>DNN Language Pack Manager</Description>
     <NeutralLanguage>en-US</NeutralLanguage>
     <ApplicationIcon />
@@ -36,4 +36,3 @@
     <Reference Include="System.Web" />
   </ItemGroup>
 </Project>
-
