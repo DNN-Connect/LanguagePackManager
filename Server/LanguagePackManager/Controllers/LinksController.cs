@@ -51,6 +51,7 @@ namespace Connect.LanguagePackManager.Presentation.Controllers
             existing.OrgName = link.OrgName;
             existing.RepoName = link.RepoName;
             existing.AssetRegex = link.AssetRegex;
+            existing.IsResourcesRepo = link.IsResourcesRepo;
             if (linkId == -1)
             {
                 PackageLinkRepository.Instance.AddPackageLink(existing.GetPackageLinkBase(), User.UserID);

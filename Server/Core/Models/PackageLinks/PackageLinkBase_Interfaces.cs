@@ -24,6 +24,7 @@ namespace Connect.LanguagePackManager.Core.Models.PackageLinks
    AssetRegex = Convert.ToString(Null.SetNull(dr["AssetRegex"], AssetRegex));
    LastChecked = (DateTime)(Null.SetNull(dr["LastChecked"], LastChecked));
    LastDownloadedVersion = Convert.ToString(Null.SetNull(dr["LastDownloadedVersion"], LastDownloadedVersion));
+   IsResourcesRepo = Convert.ToBoolean(Null.SetNull(dr["IsResourcesRepo"], IsResourcesRepo));
         }
 
         [IgnoreColumn()]
@@ -63,6 +64,8 @@ namespace Connect.LanguagePackManager.Core.Models.PackageLinks
          return "";
      };
      return PropertyAccess.FormatString(LastDownloadedVersion, strFormat);
+    case "isresourcesrepo": // Bit
+     return IsResourcesRepo.ToString();
                 default:
                     propertyNotFound = true;
                     break;

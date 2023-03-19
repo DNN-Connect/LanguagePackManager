@@ -23,6 +23,10 @@
       <th>@Dnn.LocalizeString("AssetRegex")</th>
       <td>@Html.TextBoxFor(m => m.AssetRegex, new { @class = "form-control", placeholder = Dnn.LocalizeString("AssetRegex") })</td>
     </tr>
+    <tr>
+      <th>@Dnn.LocalizeString("IsResourcesRepo")</th>
+      <td>@Html.CheckBoxFor(m => m.IsResourcesRepo, new { @class = "form-control" })</td>
+    </tr>
   </tbody>
 </table>
 

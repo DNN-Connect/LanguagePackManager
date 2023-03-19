@@ -36,6 +36,8 @@ namespace Connect.LanguagePackManager.Core.Models.PackageLinks
         public DateTime? LastChecked { get; set; }
         [DataMember]
         public string LastDownloadedVersion { get; set; }
+        [DataMember]
+        public bool IsResourcesRepo { get; set; }
         #endregion
 
         #region Methods
@@ -64,6 +66,8 @@ namespace Connect.LanguagePackManager.Core.Models.PackageLinks
 
             if (!String.IsNullOrEmpty(packageLink.LastDownloadedVersion))
                 LastDownloadedVersion = packageLink.LastDownloadedVersion;
+
+            IsResourcesRepo = packageLink.IsResourcesRepo;
 
         }
         #endregion

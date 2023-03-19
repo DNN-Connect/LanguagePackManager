@@ -39,6 +39,7 @@ namespace Connect.LanguagePackManager.Core.Models.PackageLinks
              res.AssetRegex = AssetRegex;
              res.LastChecked = LastChecked;
              res.LastDownloadedVersion = LastDownloadedVersion;
+             res.IsResourcesRepo = IsResourcesRepo;
             res.CreatedByUserID = CreatedByUserID;
             res.CreatedOnDate = CreatedOnDate;
             res.LastModifiedByUserID = LastModifiedByUserID;
@@ -56,6 +57,7 @@ namespace Connect.LanguagePackManager.Core.Models.PackageLinks
             res.AssetRegex = AssetRegex;
             res.LastChecked = LastChecked;
             res.LastDownloadedVersion = LastDownloadedVersion;
+            res.IsResourcesRepo = IsResourcesRepo;
             res.PortalID = PortalID;
             res.CreatedByUser = CreatedByUser;
             res.ModifiedByUser = ModifiedByUser;

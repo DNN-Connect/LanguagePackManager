@@ -135,6 +135,9 @@
   <data name="Edit.Title" xml:space="preserve">
     <value>Edit Package Link</value>
   </data>
+  <data name="IsResourcesRepo.Text" xml:space="preserve">
+    <value>Is Resources Repository</value>
+  </data>
   <data name="LastChecked.Text" xml:space="preserve">
     <value>Last Checked</value>
   </data>

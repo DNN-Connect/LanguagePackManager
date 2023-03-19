@@ -1,0 +1,4 @@
+ALTER TABLE {databaseOwner}{objectQualifier}Connect_LPM_PackageLinks
+ADD [IsResourcesRepo] BIT NOT NULL DEFAULT 0
+GO
+
