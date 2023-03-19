@@ -1,10 +1,8 @@
-﻿using Connect.LanguagePackManager.Core.Services.Packages;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace Connect.LanguagePackManager.Core.Services.Github
 {
@@ -13,11 +11,6 @@ namespace Connect.LanguagePackManager.Core.Services.Github
     public static List<GithubRelease> GetReleases(string org, string repo)
     {
       return GetJsonObject<List<GithubRelease>>($"repos/{org}/{repo}/releases?per_page=99");
-    }
-
-    public static GithubTree GetFileTree(string org, string repo, string treeSha)
-    {
-      return GetJsonObject<GithubTree>($"repos/{org}/{repo}/git/trees/{treeSha}?recursive=1");
     }
 
     public static GithubCommit GetLastCommit(string org, string repo)
@@ -60,7 +53,7 @@ namespace Connect.LanguagePackManager.Core.Services.Github
           ServicePointManager.Expect100Continue = true;
           ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
           client.Headers.Add("user-agent", "request");
-          
+
           client.DownloadFile(fileUrl, destinationFile);
         }
       }
@@ -70,29 +63,6 @@ namespace Connect.LanguagePackManager.Core.Services.Github
       }
 
       return true;
-    }
-
-    public static string DownloadFile(string fileUrl)
-    {
-      try
-      {
-        using (var client = new WebClient())
-        {
-          ServicePointManager.Expect100Continue = true;
-          ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
-          client.Headers.Add("user-agent", "request");
-
-          var blobJsonBytes = client.DownloadData(fileUrl);
-          var blobJson = Encoding.UTF8.GetString(blobJsonBytes, 0, blobJsonBytes.Length);
-          var blob = Newtonsoft.Json.JsonConvert.DeserializeObject<GithubBlob>(blobJson);
-          var blobBytes = Convert.FromBase64String(blob.Content);
-          return Encoding.UTF8.GetString(blobBytes, 0, blobBytes.Length);
-        }
-      }
-      catch (Exception ex)
-      {
-        return null;
-      }
     }
   }
 }

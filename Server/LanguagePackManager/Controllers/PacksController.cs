@@ -1,12 +1,9 @@
-using System.IO;
-using System.Linq;
-using System.Web.Mvc;
 using Connect.LanguagePackManager.Core.Common;
-using Connect.LanguagePackManager.Core.Data;
 using Connect.LanguagePackManager.Core.Helpers;
-using Connect.LanguagePackManager.Core.Repositories;
 using Connect.LanguagePackManager.Core.Services.Packages;
 using Connect.LanguagePackManager.Presentation.Common;
+using System.IO;
+using System.Web.Mvc;
 
 namespace Connect.LanguagePackManager.Presentation.Controllers
 {
