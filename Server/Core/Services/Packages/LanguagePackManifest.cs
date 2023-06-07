@@ -41,10 +41,15 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
 
     public void Process(bool generic, int userId)
     {
+      var handledLocaleIds = new List<int>();
       foreach (var p in this.Components)
       {
         var locale = generic ? p.Locale.Substring(0, 2) : p.Locale;
         var localeId = LocaleRepository.Instance.GetOrCreateLocale(locale).LocaleId;
+        if (!handledLocaleIds.Contains(localeId))
+        {
+          handledLocaleIds.Add(localeId);
+        }
         var dbResFiles = ResourceFileRepository.Instance.GetResourceFilesByPackage(p.Package.PackageId);
         foreach (var rf in p.ResourceFiles)
         {
@@ -60,6 +65,16 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
                 Sprocs.SetTranslation(dbT.TextId, localeId, rf.Resources[tt], userId);
               }
             }
+          }
+        }
+      }
+      foreach (var loc in LocaleRepository.Instance.GetLocales())
+      {
+        foreach (var localeId in handledLocaleIds)
+        {
+          if (loc.LocaleId == localeId || loc.GenericLocaleId == localeId)
+          {
+            Sprocs.RefreshLocaleTextCount(loc.LocaleId);
           }
         }
       }

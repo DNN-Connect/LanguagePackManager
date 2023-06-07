@@ -60,13 +60,6 @@ namespace Connect.LanguagePackManager.Presentation.Api
             var nrTexts = PackageVersionLocaleTextCountRepository.Instance.GetPackageVersionLocaleTextCounts(loc.LocaleId)
                 .Where(t => t.PackageId == id)
                 .ToList();
-            if (nrTexts.Count == 0)
-            {
-                Core.Data.Sprocs.RefreshLocaleTextCount(loc.LocaleId);
-                nrTexts = PackageVersionLocaleTextCountRepository.Instance.GetPackageVersionLocaleTextCounts(loc.LocaleId)
-                    .Where(t => t.PackageId == id)
-                    .ToList();
-            }
             return Request.CreateResponse(HttpStatusCode.OK, nrTexts);
         }
     }
