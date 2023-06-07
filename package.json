@@ -1,6 +1,6 @@
 {
   "name": "languagepackmanager",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "DNN Language Pack Manager",
   "dnn": {
     "projectFolders": [
