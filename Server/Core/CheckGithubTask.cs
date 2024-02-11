@@ -27,18 +27,26 @@ namespace Connect.LanguagePackManager.Core
         foreach (var link in links)
         {
           AddLogLine($"Checking {link.Name}");
-          if (link.IsResourcesRepo)
+          try
           {
-            GithubController.CheckResourcesRepo(link);
+            if (link.IsResourcesRepo)
+            {
+              GithubController.CheckResourcesRepo(link);
+            }
+            else
+            {
+              GithubController.CheckPackage(link);
+            }
+            AddLogLine($"Finished checking {link.Name}");
           }
-          else
+          catch (Exception ex)
           {
-            GithubController.CheckPackage(link);
+            Logger.Error(ex);
+            AddLogLine($"Error checking {link.Name}, check log for details - continuing with other packages");
           }
-          AddLogLine($"Finished checking {link.Name}");
         }
 
-        Data.Sprocs.RefreshNrTexts();
+        TextRepository.Instance.RefreshNrTexts();
         AddLogLine($"Refreshed Nr Texts");
 
         ScheduleHistoryItem.Succeeded = true;

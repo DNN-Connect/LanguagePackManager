@@ -19,11 +19,16 @@ namespace Connect.LanguagePackManager.Core.Services.Github
     {
       Logger.Info($"Checking package repo {package.Name}");
       var baseVersion = string.IsNullOrEmpty(package.LastDownloadedVersion) ? "00.00.00" : package.LastDownloadedVersion;
-      var githubVersions = GithubService.GetReleases(package.OrgName, package.RepoName)
-          .Where(gp => gp.Draft == false
-                      && gp.Prerelease == false
-                      && (string.IsNullOrEmpty(package.LastDownloadedVersion) || baseVersion.IsSmallerThan(gp.TagName.ParseVersion().ToNormalizedFormat())))
-          .OrderBy(p => p.Published);
+      var gh1 = GithubService.GetReleases(package.OrgName, package.RepoName);
+      var gh2 = gh1.Where(gp => gp.Draft == false);
+      var gh3 = gh2.Where(gp => gp.Prerelease == false);
+      var gh4 = gh3.Where(gp => (string.IsNullOrEmpty(package.LastDownloadedVersion) || baseVersion.IsSmallerThan(gp.TagName.ParseVersion().ToNormalizedFormat())));
+      var githubVersions = gh4.OrderBy(p => p.Published);
+      //var githubVersions = GithubService.GetReleases(package.OrgName, package.RepoName)
+      //    .Where(gp => gp.Draft == false
+      //                && gp.Prerelease == false
+      //                && (string.IsNullOrEmpty(package.LastDownloadedVersion) || baseVersion.IsSmallerThan(gp.TagName.ParseVersion().ToNormalizedFormat())))
+      //    .OrderBy(p => p.Published);
       foreach (var githubVersion in githubVersions)
       {
         foreach (var download in githubVersion.Assets)

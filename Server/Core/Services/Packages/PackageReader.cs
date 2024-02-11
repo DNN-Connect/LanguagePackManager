@@ -48,7 +48,17 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
       else
       {
         Logger.Info("Regular DNN package");
-        this.Manifest = new Manifest(this.UnzipResult);
+        try
+        {
+          this.Manifest = new Manifest(this.UnzipResult);
+        }
+        catch (Exception ex)
+        {
+          Logger.Error("Cannot parse manifest of package");
+          Logger.Error(ex);
+          this.IsInError= true;
+          this.ErrorMessage = "Cannot parse manifest of package";
+        }
       }
     }
 

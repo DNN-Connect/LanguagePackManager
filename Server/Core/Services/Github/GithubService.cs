@@ -79,6 +79,7 @@ namespace Connect.LanguagePackManager.Core.Services.Github
 
           Logger.Info($"Retrieving {fileUrl} and saving to {destinationFile}");
           client.DownloadFile(fileUrl, destinationFile);
+          System.Threading.Thread.Sleep(1000);
         }
       }
       catch (Exception ex)
