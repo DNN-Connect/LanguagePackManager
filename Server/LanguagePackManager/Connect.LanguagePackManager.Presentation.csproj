@@ -8,10 +8,10 @@
     <Authors>Peter Donker</Authors>
     <Company>DNN Connect</Company>
     <Product>languagepackmanager</Product>
-    <Copyright>Copyright 2023 by DNN Connect</Copyright>
+    <Copyright>Copyright 2024 by DNN Connect</Copyright>
     <PackageId>Connect.LanguagePackManager.Presentation</PackageId>
-    <AssemblyVersion>1.1.1</AssemblyVersion>
-    <FileVersion>1.1.1</FileVersion>
+    <AssemblyVersion>1.1.2</AssemblyVersion>
+    <FileVersion>1.1.2</FileVersion>
     <Description>DNN Language Pack Manager</Description>
     <NeutralLanguage>en-US</NeutralLanguage>
     <ApplicationIcon />

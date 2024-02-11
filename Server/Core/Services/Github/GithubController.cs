@@ -1,7 +1,6 @@
 ﻿using Connect.LanguagePackManager.Core.Common;
 using Connect.LanguagePackManager.Core.Helpers;
 using Connect.LanguagePackManager.Core.Models.PackageLinks;
-using Connect.LanguagePackManager.Core.Models.Packages;
 using Connect.LanguagePackManager.Core.Repositories;
 using Connect.LanguagePackManager.Core.Services.Packages;
 using DotNetNuke.Instrumentation;
