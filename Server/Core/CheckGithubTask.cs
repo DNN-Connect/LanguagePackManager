@@ -1,21 +1,20 @@
 ﻿using Connect.LanguagePackManager.Core.Repositories;
 using Connect.LanguagePackManager.Core.Services.Github;
+using DotNetNuke.Instrumentation;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Scheduling;
 using System;
-using System.Text;
 
 namespace Connect.LanguagePackManager.Core
 {
   public class CheckGithubTask : SchedulerClient
   {
+    private static readonly ILog Logger = LoggerSource.Instance.GetLogger(typeof(CheckGithubTask));
+
     public CheckGithubTask(ScheduleHistoryItem history)
     {
       this.ScheduleHistoryItem = history;
     }
-
-    public StringBuilder Log { get; set; } = new StringBuilder();
-    public DateTime Start { get; private set; } = DateTime.Now;
 
     public override void DoWork()
     {
@@ -43,12 +42,12 @@ namespace Connect.LanguagePackManager.Core
         AddLogLine($"Refreshed Nr Texts");
 
         ScheduleHistoryItem.Succeeded = true;
-        ScheduleHistoryItem.AddLogNote(Log.ToString().Replace(Environment.NewLine, "<br />"));
       }
       catch (Exception ex)
       {
         ScheduleHistoryItem.Succeeded = false;
-        ScheduleHistoryItem.AddLogNote($"Failed: {ex.Message} ({ex.StackTrace}) <br />{Log.ToString().Replace(Environment.NewLine, "<br />")}");
+        ScheduleHistoryItem.AddLogNote($"Failed: {ex.Message} ({ex.StackTrace}) <br />");
+        Logger.Error(ex);
         Errored(ref ex);
         Exceptions.LogException(ex);
       }
@@ -56,7 +55,8 @@ namespace Connect.LanguagePackManager.Core
 
     private void AddLogLine(string line)
     {
-      Log.AppendLine($"{Start.ToString("HH:mm:ss")} {line}");
+      ScheduleHistoryItem.AddLogNote(line + "<br />");
+      Logger.Info(line);
     }
   }
 }

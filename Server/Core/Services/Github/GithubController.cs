@@ -1,8 +1,10 @@
 ﻿using Connect.LanguagePackManager.Core.Common;
 using Connect.LanguagePackManager.Core.Helpers;
 using Connect.LanguagePackManager.Core.Models.PackageLinks;
+using Connect.LanguagePackManager.Core.Models.Packages;
 using Connect.LanguagePackManager.Core.Repositories;
 using Connect.LanguagePackManager.Core.Services.Packages;
+using DotNetNuke.Instrumentation;
 using System;
 using System.IO;
 using System.Linq;
@@ -12,8 +14,11 @@ namespace Connect.LanguagePackManager.Core.Services.Github
 {
   public class GithubController
   {
+    private static readonly ILog Logger = LoggerSource.Instance.GetLogger(typeof(GithubController));
+
     public static void CheckPackage(PackageLink package)
     {
+      Logger.Info($"Checking package repo {package.Name}");
       var baseVersion = string.IsNullOrEmpty(package.LastDownloadedVersion) ? "00.00.00" : package.LastDownloadedVersion;
       var githubVersions = GithubService.GetReleases(package.OrgName, package.RepoName)
           .Where(gp => gp.Draft == false
@@ -42,10 +47,12 @@ namespace Connect.LanguagePackManager.Core.Services.Github
       }
       package.LastChecked = DateTime.Now;
       PackageLinkRepository.Instance.UpdatePackageLink(package.GetPackageLinkBase(), -1);
+      Logger.Info($"Finished checking package repo {package.Name}");
     }
 
     public static void CheckResourcesRepo(PackageLink package)
     {
+      Logger.Info($"Checking resources repo {package.Name}");
       var lastCommit = GithubService.GetLastCommit(package.OrgName, package.RepoName);
       if (lastCommit != null && lastCommit.Details != null && lastCommit.Details.Committer != null)
       {
@@ -112,10 +119,12 @@ namespace Connect.LanguagePackManager.Core.Services.Github
       }
       package.LastChecked = DateTime.Now;
       PackageLinkRepository.Instance.UpdatePackageLink(package.GetPackageLinkBase(), -1);
+      Logger.Info($"Finished checking resources repo {package.Name}");
     }
 
     public static string GetGithubPackage(string url)
     {
+      Logger.Info($"Getting release file {url}");
       var fileToDownload = url.Substring(url.LastIndexOf('/') + 1);
       var fileToSave = Path.Combine(Globals.GetLpmFolder(-1, "Temp"), fileToDownload);
       if (File.Exists(fileToSave)) return fileToSave;
