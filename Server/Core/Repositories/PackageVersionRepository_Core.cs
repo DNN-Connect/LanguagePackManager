@@ -28,7 +28,7 @@ namespace Connect.LanguagePackManager.Core.Repositories
             using (var context = DataContext.Instance())
             {
                 return context.ExecuteQuery<PackageVersion>(System.Data.CommandType.Text,
-                    "SELECT * FROM {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersions WHERE PackageId=@0",
+                    "SELECT * FROM {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersions WHERE PackageId=@0 ORDER BY Version DESC",
                     packageId);
             }
         }

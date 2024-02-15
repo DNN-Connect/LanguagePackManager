@@ -8,10 +8,12 @@
   var knownGenericLocales = LocaleRepository.Instance.GetLocales().Where(l => l.Code.Length == 2).Select(l => l.Code).ToList();
   var locales = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
       .Where(l => knownGenericLocales.Contains(l.TwoLetterISOLanguageName))
-      .Select(l => new { Key = l.Name, Value = l.ParseRegion() });
+      .Select(l => new { Key = l.Name, Value = l.ParseRegion() })
+      .OrderBy(l => l.Value);
   var genlocales = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.NeutralCultures)
     .Where(l => knownGenericLocales.Contains(l.TwoLetterISOLanguageName))
-    .Select(l => new { Key = l.Name, Value = l.EnglishName });
+    .Select(l => new { Key = l.Name, Value = l.EnglishName })
+    .OrderBy(l => l.Value);
   var packageList = PackageVersionRepository.Instance.GetPackageVersions(Dnn.ModuleContext.ModuleId)
       .Where(p => p.ContainedInPackageVersionId == null)
       .Select(p => new { Key = p.PackageId, Value = p.FriendlyName })
