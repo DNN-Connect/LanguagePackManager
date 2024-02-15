@@ -132,6 +132,9 @@
   <data name="Released" xml:space="preserve">
     <value>Released</value>
   </data>
+  <data name="Select" xml:space="preserve">
+    <value>&lt; Select ... &gt;</value>
+  </data>
   <data name="Stats" xml:space="preserve">
     <value>Stats</value>
   </data>
