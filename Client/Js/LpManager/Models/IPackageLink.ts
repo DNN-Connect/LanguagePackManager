@@ -7,6 +7,7 @@ export interface IPackageLink {
   AssetRegex: string;
   LastChecked?: Date;
   LastDownloadedVersion: string;
+  IsResourcesRepo: boolean;
   CreatedByUserID: number;
   CreatedOnDate: Date;
   LastModifiedByUserID: number;
@@ -25,6 +26,7 @@ export class PackageLink implements IPackageLink {
   AssetRegex: string;
   LastChecked?: Date;
   LastDownloadedVersion: string;
+  IsResourcesRepo: boolean;
   CreatedByUserID: number;
   CreatedOnDate: Date;
   LastModifiedByUserID: number;
@@ -39,6 +41,7 @@ export class PackageLink implements IPackageLink {
   this.OrgName = "";
   this.RepoName = "";
   this.AssetRegex = "";
+  this.IsResourcesRepo = false;
   this.CreatedByUserID = -1;
   this.CreatedOnDate = new Date();
   this.LastModifiedByUserID = -1;
