@@ -1,7 +1,25 @@
-/******* TRIGGERS *******/
+/******* TYPES *******/
+IF  EXISTS (SELECT * FROM sys.types st JOIN {objectQualifier}sys.schemas ss ON st.schema_id = ss.schema_id WHERE st.name = N'{objectQualifier}Connect_LPM_GetStatsLocales' AND ss.name = N'dbo')
+DROP TYPE {databaseOwner}{objectQualifier}Connect_LPM_GetStatsLocales
+GO
+
+CREATE TYPE {databaseOwner}{objectQualifier}Connect_LPM_GetStatsLocales AS TABLE(
+ [LocaleCode] [varchar](10) NULL
+)
+GO
+
+IF  EXISTS (SELECT * FROM sys.types st JOIN {objectQualifier}sys.schemas ss ON st.schema_id = ss.schema_id WHERE st.name = N'{objectQualifier}Connect_LPM_GetStatsPackages' AND ss.name = N'dbo')
+DROP TYPE {databaseOwner}{objectQualifier}Connect_LPM_GetStatsPackages
+GO
+
+CREATE TYPE {databaseOwner}{objectQualifier}Connect_LPM_GetStatsPackages AS TABLE(
+ [PackageName] [nvarchar](128) NULL,
+ [Version] [varchar](15) NULL
+)
+GO
+
 /******* VIEWS AND FUNCTIONS *******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_PackageLinks'))
-DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageLinks
+DROP VIEW IF EXISTS {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageLinks
 GO
 
 SET ANSI_NULLS ON
@@ -21,8 +39,7 @@ LEFT JOIN {databaseOwner}{objectQualifier}Users cu ON cu.UserID=pl.CreatedByUser
 LEFT JOIN {databaseOwner}{objectQualifier}Users mu ON mu.UserID=pl.LastModifiedByUserID
 GO
 
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_Packages'))
-DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_Packages
+DROP VIEW IF EXISTS {databaseOwner}{objectQualifier}vw_Connect_LPM_Packages
 GO
 
 SET ANSI_NULLS ON
@@ -40,8 +57,7 @@ FROM {databaseOwner}{objectQualifier}Connect_LPM_Packages p
 INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageLinks pl ON pl.PackageLinkId=p.LinkId
 GO
 
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersionLocaleTextCounts'))
-DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersionLocaleTextCounts
+DROP VIEW IF EXISTS {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersionLocaleTextCounts
 GO
 
 SET ANSI_NULLS ON
@@ -58,8 +74,7 @@ FROM {databaseOwner}{objectQualifier}Connect_LPM_PackageVersionLocaleTextCounts 
 INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageVersions pv ON pv.PackageVersionId=tc.PackageVersionId
 GO
 
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersions'))
-DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersions
+DROP VIEW IF EXISTS {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersions
 GO
 
 SET ANSI_NULLS ON
@@ -83,8 +98,7 @@ INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageLinks pl ON pl.Pac
 INNER JOIN {databaseOwner}{objectQualifier}Modules m ON m.ModuleID=pl.ModuleId
 GO
 
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_Texts'))
-DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_Texts
+DROP VIEW IF EXISTS {databaseOwner}{objectQualifier}vw_Connect_LPM_Texts
 GO
 
 SET ANSI_NULLS ON
@@ -105,8 +119,7 @@ LEFT JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageVersions pve ON pve
 INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_ResourceFiles rf ON rf.ResourceFileId=t.ResourceFileId
 GO
 
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}vw_Connect_LPM_Translations'))
-DROP VIEW {databaseOwner}{objectQualifier}vw_Connect_LPM_Translations
+DROP VIEW IF EXISTS {databaseOwner}{objectQualifier}vw_Connect_LPM_Translations
 GO
 
 SET ANSI_NULLS ON
@@ -187,6 +200,36 @@ AND txt.FirstInVersion <= @Version
 AND @Version < txt.DeprecatedInVersion) x
 WHERE NOT x.TextValue IS NULL
 ORDER BY FilePath, TextKey
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_GetStats') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}Connect_LPM_GetStats
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROC {databaseOwner}{objectQualifier}Connect_LPM_GetStats
+ @PortalId INT,
+ @Packages {databaseOwner}{objectQualifier}Connect_LPM_GetStatsPackages READONLY,
+ @Locales {databaseOwner}{objectQualifier}Connect_LPM_GetStatsLocales READONLY
+AS
+SELECT
+ p.PackageName,
+ pv.Version,
+ l.Code,
+ pv.NrTexts TotalTexts,
+ x.NrTexts
+FROM {databaseOwner}{objectQualifier}Connect_LPM_PackageVersionLocaleTextCounts x
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageVersions pv ON pv.PackageVersionId=x.PackageVersionId
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_Packages p ON p.PackageId=pv.PackageId
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageLinks pl ON pl.PackageLinkId=p.LinkId
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_Locales l ON x.LocaleId=l.LocaleId
+INNER JOIN {databaseOwner}{objectQualifier}Modules m ON m.ModuleID=pl.ModuleId
+INNER JOIN @Packages paramp ON paramp.PackageName=p.PackageName AND paramp.Version = pv.Version
+INNER JOIN @Locales paraml ON paraml.LocaleCode=l.Code
+WHERE m.PortalID=@PortalId
 GO
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_RefreshLocaleTextCount') AND type in (N'P', N'PC'))
