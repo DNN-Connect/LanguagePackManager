@@ -8,33 +8,8 @@ using DotNetNuke.Services.Tokens;
 
 namespace Connect.LanguagePackManager.Core.Models.PackageLinks
 {
-    public partial class PackageLinkBase : IHydratable, IPropertyAccess
+    public partial class PackageLinkBase : IPropertyAccess
     {
-
-        #region IHydratable
-
-        public virtual void Fill(IDataReader dr)
-        {
-            FillAuditFields(dr);
-   PackageLinkId = Convert.ToInt32(Null.SetNull(dr["PackageLinkId"], PackageLinkId));
-   ModuleId = Convert.ToInt32(Null.SetNull(dr["ModuleId"], ModuleId));
-   Name = Convert.ToString(Null.SetNull(dr["Name"], Name));
-   OrgName = Convert.ToString(Null.SetNull(dr["OrgName"], OrgName));
-   RepoName = Convert.ToString(Null.SetNull(dr["RepoName"], RepoName));
-   AssetRegex = Convert.ToString(Null.SetNull(dr["AssetRegex"], AssetRegex));
-   LastChecked = (DateTime)(Null.SetNull(dr["LastChecked"], LastChecked));
-   LastDownloadedVersion = Convert.ToString(Null.SetNull(dr["LastDownloadedVersion"], LastDownloadedVersion));
-   IsResourcesRepo = Convert.ToBoolean(Null.SetNull(dr["IsResourcesRepo"], IsResourcesRepo));
-        }
-
-        [IgnoreColumn()]
-        public int KeyID
-        {
-            get { return PackageLinkId; }
-            set { PackageLinkId = value; }
-        }
-        #endregion
-
         #region IPropertyAccess
         public virtual string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, DotNetNuke.Entities.Users.UserInfo accessingUser, DotNetNuke.Services.Tokens.Scope accessLevel, ref bool propertyNotFound)
         {

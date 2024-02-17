@@ -37,27 +37,13 @@ namespace Connect.LanguagePackManager.Core.Models.Packages
         #region Methods
         public void ReadPackageBase(PackageBase package)
         {
-            if (package.PackageId > -1)
-                PackageId = package.PackageId;
-
-            if (package.LinkId > -1)
-                LinkId = package.LinkId;
-
-            if (!String.IsNullOrEmpty(package.PackageName))
-                PackageName = package.PackageName;
-
-            if (!String.IsNullOrEmpty(package.FriendlyName))
-                FriendlyName = package.FriendlyName;
-
-            if (!String.IsNullOrEmpty(package.PackageType))
-                PackageType = package.PackageType;
-
-            if (!String.IsNullOrEmpty(package.InstallPath))
-                InstallPath = package.InstallPath;
-
-            if (!String.IsNullOrEmpty(package.LastVersion))
-                LastVersion = package.LastVersion;
-
+            PackageId = package.PackageId;
+            LinkId = package.LinkId;
+            PackageName = package.PackageName;
+            FriendlyName = package.FriendlyName;
+            PackageType = package.PackageType;
+            InstallPath = package.InstallPath;
+            LastVersion = package.LastVersion;
         }
         #endregion
 

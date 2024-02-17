@@ -8,26 +8,8 @@ using DotNetNuke.Services.Tokens;
 
 namespace Connect.LanguagePackManager.Core.Models.PackageVersionLocaleTextCounts
 {
-    public partial class PackageVersionLocaleTextCountBase : IHydratable, IPropertyAccess
+    public partial class PackageVersionLocaleTextCountBase : IPropertyAccess
     {
-
-        #region IHydratable
-
-        public virtual void Fill(IDataReader dr)
-        {
-   PackageVersionId = Convert.ToInt32(Null.SetNull(dr["PackageVersionId"], PackageVersionId));
-   LocaleId = Convert.ToInt32(Null.SetNull(dr["LocaleId"], LocaleId));
-   NrTexts = Convert.ToInt32(Null.SetNull(dr["NrTexts"], NrTexts));
-        }
-
-        [IgnoreColumn()]
-        public int KeyID
-        {
-            get { return Null.NullInteger; }
-            set { }
-        }
-        #endregion
-
         #region IPropertyAccess
         public virtual string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, DotNetNuke.Entities.Users.UserInfo accessingUser, DotNetNuke.Services.Tokens.Scope accessLevel, ref bool propertyNotFound)
         {

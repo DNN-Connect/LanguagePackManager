@@ -8,30 +8,8 @@ using DotNetNuke.Services.Tokens;
 
 namespace Connect.LanguagePackManager.Core.Models.Packages
 {
-    public partial class PackageBase : IHydratable, IPropertyAccess
+    public partial class PackageBase : IPropertyAccess
     {
-
-        #region IHydratable
-
-        public virtual void Fill(IDataReader dr)
-        {
-   PackageId = Convert.ToInt32(Null.SetNull(dr["PackageId"], PackageId));
-   LinkId = Convert.ToInt32(Null.SetNull(dr["LinkId"], LinkId));
-   PackageName = Convert.ToString(Null.SetNull(dr["PackageName"], PackageName));
-   FriendlyName = Convert.ToString(Null.SetNull(dr["FriendlyName"], FriendlyName));
-   PackageType = Convert.ToString(Null.SetNull(dr["PackageType"], PackageType));
-   InstallPath = Convert.ToString(Null.SetNull(dr["InstallPath"], InstallPath));
-   LastVersion = Convert.ToString(Null.SetNull(dr["LastVersion"], LastVersion));
-        }
-
-        [IgnoreColumn()]
-        public int KeyID
-        {
-            get { return PackageId; }
-            set { PackageId = value; }
-        }
-        #endregion
-
         #region IPropertyAccess
         public virtual string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, DotNetNuke.Entities.Users.UserInfo accessingUser, DotNetNuke.Services.Tokens.Scope accessLevel, ref bool propertyNotFound)
         {

@@ -8,26 +8,8 @@ using DotNetNuke.Services.Tokens;
 
 namespace Connect.LanguagePackManager.Core.Models.ResourceFiles
 {
-    public partial class ResourceFile : IHydratable, IPropertyAccess
+    public partial class ResourceFile : IPropertyAccess
     {
-
-        #region IHydratable
-
-        public virtual void Fill(IDataReader dr)
-        {
-   ResourceFileId = Convert.ToInt32(Null.SetNull(dr["ResourceFileId"], ResourceFileId));
-   PackageId = Convert.ToInt32(Null.SetNull(dr["PackageId"], PackageId));
-   FilePath = Convert.ToString(Null.SetNull(dr["FilePath"], FilePath));
-        }
-
-        [IgnoreColumn()]
-        public int KeyID
-        {
-            get { return ResourceFileId; }
-            set { ResourceFileId = value; }
-        }
-        #endregion
-
         #region IPropertyAccess
         public virtual string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, DotNetNuke.Entities.Users.UserInfo accessingUser, DotNetNuke.Services.Tokens.Scope accessLevel, ref bool propertyNotFound)
         {

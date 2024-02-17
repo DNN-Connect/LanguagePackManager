@@ -37,25 +37,13 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersions
         #region Methods
         public void ReadPackageVersionBase(PackageVersionBase packageVersion)
         {
-            if (packageVersion.PackageVersionId > -1)
-                PackageVersionId = packageVersion.PackageVersionId;
-
-            if (packageVersion.PackageId > -1)
-                PackageId = packageVersion.PackageId;
-
-            if (packageVersion.ContainedInPackageVersionId > -1)
-                ContainedInPackageVersionId = packageVersion.ContainedInPackageVersionId;
-
-            if (!String.IsNullOrEmpty(packageVersion.Version))
-                Version = packageVersion.Version;
-
+            PackageVersionId = packageVersion.PackageVersionId;
+            PackageId = packageVersion.PackageId;
+            ContainedInPackageVersionId = packageVersion.ContainedInPackageVersionId;
+            Version = packageVersion.Version;
             ReleaseDate = packageVersion.ReleaseDate;
-
             Downloaded = packageVersion.Downloaded;
-
-            if (packageVersion.NrTexts > -1)
-                NrTexts = packageVersion.NrTexts;
-
+            NrTexts = packageVersion.NrTexts;
         }
         #endregion
 

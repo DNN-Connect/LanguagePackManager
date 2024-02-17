@@ -35,24 +35,12 @@ namespace Connect.LanguagePackManager.Core.Models.Texts
         #region Methods
         public void ReadTextBase(TextBase text)
         {
-            if (text.TextId > -1)
-                TextId = text.TextId;
-
-            if (text.PackageVersionId > -1)
-                PackageVersionId = text.PackageVersionId;
-
-            if (text.ResourceFileId > -1)
-                ResourceFileId = text.ResourceFileId;
-
-            if (!String.IsNullOrEmpty(text.TextKey))
-                TextKey = text.TextKey;
-
-            if (!String.IsNullOrEmpty(text.OriginalValue))
-                OriginalValue = text.OriginalValue;
-
-            if (text.DeprecatedInVersionId > -1)
-                DeprecatedInVersionId = text.DeprecatedInVersionId;
-
+            TextId = text.TextId;
+            PackageVersionId = text.PackageVersionId;
+            ResourceFileId = text.ResourceFileId;
+            TextKey = text.TextKey;
+            OriginalValue = text.OriginalValue;
+            DeprecatedInVersionId = text.DeprecatedInVersionId;
         }
         #endregion
 

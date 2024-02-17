@@ -1,0 +1,15 @@
+{
+  "Template": ".\\.templates\\Main.cshtml",
+  "OutputDirectory": ".\\.out",
+  "OrgName": "Connect",
+  "ModuleName": "LanguagePackManager",
+  "RootNameSpace": "Connect.LanguagePackManager.Core",
+  "SiteConfig": "",
+  "ConnectionString": "Data Source=(local);Initial Catalog=www_dnnconnect_dev;uid=test;pwd=test;TrustServerCertificate=True",
+  "ObjectQualifier": "",
+  "DatabaseOwner": "dbo",
+  "ModuleObjectQualifier": "Connect_LPM",
+  "IncludeSqlScripts": true,
+  "EnumValues": null,
+  "FullDbPattern": ""
+}

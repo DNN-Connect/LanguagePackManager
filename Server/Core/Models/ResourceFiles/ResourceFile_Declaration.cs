@@ -29,15 +29,9 @@ namespace Connect.LanguagePackManager.Core.Models.ResourceFiles
         #region Methods
         public void ReadResourceFile(ResourceFile resourceFile)
         {
-            if (resourceFile.ResourceFileId > -1)
-                ResourceFileId = resourceFile.ResourceFileId;
-
-            if (resourceFile.PackageId > -1)
-                PackageId = resourceFile.PackageId;
-
-            if (!String.IsNullOrEmpty(resourceFile.FilePath))
-                FilePath = resourceFile.FilePath;
-
+            ResourceFileId = resourceFile.ResourceFileId;
+            PackageId = resourceFile.PackageId;
+            FilePath = resourceFile.FilePath;
         }
         #endregion
 

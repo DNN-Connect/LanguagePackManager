@@ -12,20 +12,6 @@ namespace Connect.LanguagePackManager.Core.Models.Translations
  public partial class Translation
  {
 
-  #region IHydratable
-  public override void Fill(IDataReader dr)
-  {
-   base.Fill(dr);
-   PackageId = Convert.ToInt32(Null.SetNull(dr["PackageId"], PackageId));
-   FilePath = Convert.ToString(Null.SetNull(dr["FilePath"], FilePath));
-   TextKey = Convert.ToString(Null.SetNull(dr["TextKey"], TextKey));
-   FirstInVersion = Convert.ToString(Null.SetNull(dr["FirstInVersion"], FirstInVersion));
-   DeprecatedInVersion = Convert.ToString(Null.SetNull(dr["DeprecatedInVersion"], DeprecatedInVersion));
-   CreatedByUser = Convert.ToString(Null.SetNull(dr["CreatedByUser"], CreatedByUser));
-   ModifiedByUser = Convert.ToString(Null.SetNull(dr["ModifiedByUser"], ModifiedByUser));
-  }
-  #endregion
-
   #region IPropertyAccess
   public override string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, DotNetNuke.Entities.Users.UserInfo accessingUser, DotNetNuke.Services.Tokens.Scope accessLevel, ref bool propertyNotFound)
   {

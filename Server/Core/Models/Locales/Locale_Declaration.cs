@@ -29,15 +29,9 @@ namespace Connect.LanguagePackManager.Core.Models.Locales
         #region Methods
         public void ReadLocale(Locale locale)
         {
-            if (locale.LocaleId > -1)
-                LocaleId = locale.LocaleId;
-
-            if (!String.IsNullOrEmpty(locale.Code))
-                Code = locale.Code;
-
-            if (locale.GenericLocaleId > -1)
-                GenericLocaleId = locale.GenericLocaleId;
-
+            LocaleId = locale.LocaleId;
+            Code = locale.Code;
+            GenericLocaleId = locale.GenericLocaleId;
         }
         #endregion
 

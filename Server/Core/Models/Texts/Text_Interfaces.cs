@@ -12,17 +12,6 @@ namespace Connect.LanguagePackManager.Core.Models.Texts
  public partial class Text
  {
 
-  #region IHydratable
-  public override void Fill(IDataReader dr)
-  {
-   base.Fill(dr);
-   FilePath = Convert.ToString(Null.SetNull(dr["FilePath"], FilePath));
-   PackageId = Convert.ToInt32(Null.SetNull(dr["PackageId"], PackageId));
-   FirstInVersion = Convert.ToString(Null.SetNull(dr["FirstInVersion"], FirstInVersion));
-   DeprecatedInVersion = Convert.ToString(Null.SetNull(dr["DeprecatedInVersion"], DeprecatedInVersion));
-  }
-  #endregion
-
   #region IPropertyAccess
   public override string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, DotNetNuke.Entities.Users.UserInfo accessingUser, DotNetNuke.Services.Tokens.Scope accessLevel, ref bool propertyNotFound)
   {

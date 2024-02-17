@@ -28,15 +28,9 @@ namespace Connect.LanguagePackManager.Core.Models.Translations
         #region Methods
         public void ReadTranslationBase(TranslationBase translation)
         {
-            if (translation.TextId > -1)
-                TextId = translation.TextId;
-
-            if (translation.Locale > -1)
-                Locale = translation.Locale;
-
-            if (!String.IsNullOrEmpty(translation.TextValue))
-                TextValue = translation.TextValue;
-
+            TextId = translation.TextId;
+            Locale = translation.Locale;
+            TextValue = translation.TextValue;
         }
         #endregion
 

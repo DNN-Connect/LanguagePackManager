@@ -12,16 +12,6 @@ namespace Connect.LanguagePackManager.Core.Models.Packages
  public partial class Package
  {
 
-  #region IHydratable
-  public override void Fill(IDataReader dr)
-  {
-   base.Fill(dr);
-   Name = Convert.ToString(Null.SetNull(dr["Name"], Name));
-   LastChecked = (DateTime)(Null.SetNull(dr["LastChecked"], LastChecked));
-   ModuleId = Convert.ToInt32(Null.SetNull(dr["ModuleId"], ModuleId));
-  }
-  #endregion
-
   #region IPropertyAccess
   public override string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, DotNetNuke.Entities.Users.UserInfo accessingUser, DotNetNuke.Services.Tokens.Scope accessLevel, ref bool propertyNotFound)
   {

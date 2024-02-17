@@ -27,15 +27,9 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersionLocaleTextCounts
         #region Methods
         public void ReadPackageVersionLocaleTextCountBase(PackageVersionLocaleTextCountBase packageVersionLocaleTextCount)
         {
-            if (packageVersionLocaleTextCount.PackageVersionId > -1)
-                PackageVersionId = packageVersionLocaleTextCount.PackageVersionId;
-
-            if (packageVersionLocaleTextCount.LocaleId > -1)
-                LocaleId = packageVersionLocaleTextCount.LocaleId;
-
-            if (packageVersionLocaleTextCount.NrTexts > -1)
-                NrTexts = packageVersionLocaleTextCount.NrTexts;
-
+            PackageVersionId = packageVersionLocaleTextCount.PackageVersionId;
+            LocaleId = packageVersionLocaleTextCount.LocaleId;
+            NrTexts = packageVersionLocaleTextCount.NrTexts;
         }
         #endregion
 

@@ -8,27 +8,8 @@ using DotNetNuke.Services.Tokens;
 
 namespace Connect.LanguagePackManager.Core.Models.Translations
 {
-    public partial class TranslationBase : IHydratable, IPropertyAccess
+    public partial class TranslationBase : IPropertyAccess
     {
-
-        #region IHydratable
-
-        public virtual void Fill(IDataReader dr)
-        {
-            FillAuditFields(dr);
-   TextId = Convert.ToInt32(Null.SetNull(dr["TextId"], TextId));
-   Locale = Convert.ToInt32(Null.SetNull(dr["Locale"], Locale));
-   TextValue = Convert.ToString(Null.SetNull(dr["TextValue"], TextValue));
-        }
-
-        [IgnoreColumn()]
-        public int KeyID
-        {
-            get { return Null.NullInteger; }
-            set { }
-        }
-        #endregion
-
         #region IPropertyAccess
         public virtual string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, DotNetNuke.Entities.Users.UserInfo accessingUser, DotNetNuke.Services.Tokens.Scope accessLevel, ref bool propertyNotFound)
         {

@@ -8,29 +8,8 @@ using DotNetNuke.Services.Tokens;
 
 namespace Connect.LanguagePackManager.Core.Models.Texts
 {
-    public partial class TextBase : IHydratable, IPropertyAccess
+    public partial class TextBase : IPropertyAccess
     {
-
-        #region IHydratable
-
-        public virtual void Fill(IDataReader dr)
-        {
-   TextId = Convert.ToInt32(Null.SetNull(dr["TextId"], TextId));
-   PackageVersionId = Convert.ToInt32(Null.SetNull(dr["PackageVersionId"], PackageVersionId));
-   ResourceFileId = Convert.ToInt32(Null.SetNull(dr["ResourceFileId"], ResourceFileId));
-   TextKey = Convert.ToString(Null.SetNull(dr["TextKey"], TextKey));
-   OriginalValue = Convert.ToString(Null.SetNull(dr["OriginalValue"], OriginalValue));
-   DeprecatedInVersionId = Convert.ToInt32(Null.SetNull(dr["DeprecatedInVersionId"], DeprecatedInVersionId));
-        }
-
-        [IgnoreColumn()]
-        public int KeyID
-        {
-            get { return TextId; }
-            set { TextId = value; }
-        }
-        #endregion
-
         #region IPropertyAccess
         public virtual string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, DotNetNuke.Entities.Users.UserInfo accessingUser, DotNetNuke.Services.Tokens.Scope accessLevel, ref bool propertyNotFound)
         {

@@ -43,32 +43,15 @@ namespace Connect.LanguagePackManager.Core.Models.PackageLinks
         #region Methods
         public void ReadPackageLinkBase(PackageLinkBase packageLink)
         {
-            if (packageLink.PackageLinkId > -1)
-                PackageLinkId = packageLink.PackageLinkId;
-
-            if (packageLink.ModuleId > -1)
-                ModuleId = packageLink.ModuleId;
-
-            if (!String.IsNullOrEmpty(packageLink.Name))
-                Name = packageLink.Name;
-
-            if (!String.IsNullOrEmpty(packageLink.OrgName))
-                OrgName = packageLink.OrgName;
-
-            if (!String.IsNullOrEmpty(packageLink.RepoName))
-                RepoName = packageLink.RepoName;
-
-            if (!String.IsNullOrEmpty(packageLink.AssetRegex))
-                AssetRegex = packageLink.AssetRegex;
-
-            if (packageLink.LastChecked != null)
+            PackageLinkId = packageLink.PackageLinkId;
+            ModuleId = packageLink.ModuleId;
+            Name = packageLink.Name;
+            OrgName = packageLink.OrgName;
+            RepoName = packageLink.RepoName;
+            AssetRegex = packageLink.AssetRegex;
             LastChecked = packageLink.LastChecked;
-
-            if (!String.IsNullOrEmpty(packageLink.LastDownloadedVersion))
-                LastDownloadedVersion = packageLink.LastDownloadedVersion;
-
+            LastDownloadedVersion = packageLink.LastDownloadedVersion;
             IsResourcesRepo = packageLink.IsResourcesRepo;
-
         }
         #endregion
 
