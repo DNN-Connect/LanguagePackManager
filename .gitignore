@@ -1,4 +1,5 @@
 _Development
+.out
 .vs
 **/bin
 **/obj
@@ -7,3 +8,4 @@ node_modules
 Releases
 Server/LanguagePackManager/js/lpmanager.js
 Server/LanguagePackManager/js/lpmanager.js.LICENSE.txt
+*.bat
