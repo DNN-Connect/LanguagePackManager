@@ -95,12 +95,21 @@ namespace Connect.LanguagePackManager.Core.Api
         packages.Rows.Add(p.PackageName, p.Version.ParseVersion().ToNormalizedFormat());
       }
 
+      var existingLocales = LocaleRepository.Instance.GetLocales();
+
       var locales = new DataTable();
       locales.Columns.Add("Version");
 
       foreach (var l in data.Locales)
       {
-        locales.Rows.Add(l);
+        if (existingLocales.FirstOrDefault(l1 => l1.Code == l) != null)
+        {
+          locales.Rows.Add(l);
+        }
+        else if (l.IndexOf("-") > 0 && existingLocales.FirstOrDefault(l1 => l1.Code == l.Substring(0, l.IndexOf("-"))) != null)
+        {
+          locales.Rows.Add(l);
+        }
       }
 
       var res = Data.Sprocs.GetStats(PortalSettings.PortalId, packages, locales);
