@@ -108,7 +108,7 @@ namespace Connect.LanguagePackManager.Core.Api
         }
         else if (l.IndexOf("-") > 0 && existingLocales.FirstOrDefault(l1 => l1.Code == l.Substring(0, l.IndexOf("-"))) != null)
         {
-          locales.Rows.Add(l);
+          locales.Rows.Add(l.Substring(0, l.IndexOf("-")));
         }
       }
 
