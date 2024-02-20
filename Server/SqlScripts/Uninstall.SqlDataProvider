@@ -15,10 +15,6 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwn
 DROP PROCEDURE {databaseOwner}{objectQualifier}Connect_LPM_GetStats
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_RefreshLocaleTextCount') AND type in (N'P', N'PC'))
-DROP PROCEDURE {databaseOwner}{objectQualifier}Connect_LPM_RefreshLocaleTextCount
-GO
-
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_RefreshNrTexts') AND type in (N'P', N'PC'))
 DROP PROCEDURE {databaseOwner}{objectQualifier}Connect_LPM_RefreshNrTexts
 GO

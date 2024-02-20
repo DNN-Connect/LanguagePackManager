@@ -1,8 +1,7 @@
+using Connect.LanguagePackManager.Core.Models.Locales;
 using DotNetNuke.Data;
 using DotNetNuke.Framework;
-using Connect.LanguagePackManager.Core.Models.Locales;
 using System.Collections.Generic;
-using Connect.LanguagePackManager.Core.Data;
 
 namespace Connect.LanguagePackManager.Core.Repositories
 {
@@ -28,7 +27,6 @@ namespace Connect.LanguagePackManager.Core.Repositories
  INSERT INTO {databaseOwner}{objectQualifier}Connect_LPM_Locales (Code) VALUES (@0);", code);
           }
           res = context.ExecuteSingleOrDefault<Locale>(System.Data.CommandType.Text, @"SELECT * FROM {databaseOwner}{objectQualifier}Connect_LPM_Locales WHERE Code=@0;", code);
-          Sprocs.RefreshLocaleTextCount(res.LocaleId);
         }
         return res;
       }

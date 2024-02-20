@@ -1,4 +1,5 @@
-﻿using Connect.LanguagePackManager.Core.Repositories;
+﻿using Connect.LanguagePackManager.Core.Data;
+using Connect.LanguagePackManager.Core.Repositories;
 using Connect.LanguagePackManager.Core.Services.Github;
 using DotNetNuke.Instrumentation;
 using DotNetNuke.Services.Exceptions;
@@ -24,6 +25,7 @@ namespace Connect.LanguagePackManager.Core
         Common.Globals.CleanupTempFolder();
 
         var links = PackageLinkRepository.Instance.GetPackageLinks();
+        var downloadedResourcesPacks = 0;
         foreach (var link in links)
         {
           AddLogLine($"Checking {link.Name}");
@@ -31,7 +33,7 @@ namespace Connect.LanguagePackManager.Core
           {
             if (link.IsResourcesRepo)
             {
-              GithubController.CheckResourcesRepo(link);
+              downloadedResourcesPacks += GithubController.CheckResourcesRepo(link);
             }
             else
             {
@@ -46,8 +48,13 @@ namespace Connect.LanguagePackManager.Core
           }
         }
 
-        TextRepository.Instance.RefreshNrTexts();
-        AddLogLine($"Refreshed Nr Texts");
+        if (downloadedResourcesPacks > 0)
+        {
+          Sprocs.DetectChangesPackageVersionLocaleTextCounts();
+          Sprocs.InsertMissingPackageVersionLocaleTextCounts();
+          Sprocs.UpdatePackageVersionLocaleTextCounts();
+          AddLogLine($"Refreshed Nr Translations");
+        }
 
         ScheduleHistoryItem.Succeeded = true;
       }

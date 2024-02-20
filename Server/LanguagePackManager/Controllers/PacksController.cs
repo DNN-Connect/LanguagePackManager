@@ -1,4 +1,5 @@
 using Connect.LanguagePackManager.Core.Common;
+using Connect.LanguagePackManager.Core.Data;
 using Connect.LanguagePackManager.Core.Helpers;
 using Connect.LanguagePackManager.Core.Services.Packages;
 using Connect.LanguagePackManager.Presentation.Common;
@@ -25,6 +26,9 @@ namespace Connect.LanguagePackManager.Presentation.Controllers
       var unzipResult = ZipHelper.Unzip(this.ControllerContext.HttpContext.Request.Files[0].InputStream, "", true);
       var manifest = new LanguagePackManifest(unzipResult, ModuleContext.ModuleId);
       manifest.Process(generic, User.UserID);
+      Sprocs.DetectChangesPackageVersionLocaleTextCounts();
+      Sprocs.InsertMissingPackageVersionLocaleTextCounts();
+      Sprocs.UpdatePackageVersionLocaleTextCounts();
 
       try
       {

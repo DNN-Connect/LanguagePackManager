@@ -5,3 +5,7 @@ ALTER TABLE {databaseOwner}{objectQualifier}Connect_LPM_PackageVersionLocaleText
 ADD [LastChange] DATETIME NOT NULL
 GO
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_RefreshLocaleTextCount') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}Connect_LPM_RefreshLocaleTextCount
+GO
+

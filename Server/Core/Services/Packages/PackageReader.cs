@@ -1,4 +1,5 @@
 ﻿using Connect.LanguagePackManager.Core.Common;
+using Connect.LanguagePackManager.Core.Data;
 using Connect.LanguagePackManager.Core.Helpers;
 using Connect.LanguagePackManager.Core.Models.Packages;
 using Connect.LanguagePackManager.Core.Models.PackageVersions;
@@ -155,6 +156,8 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
       }
       package.LastChecked = DateTime.Now;
       PackageRepository.Instance.UpdatePackage(package.GetPackageBase());
+
+      Sprocs.RefreshNrOriginalTexts(package.PackageId);
 
       return packageVersion.PackageVersionId;
     }

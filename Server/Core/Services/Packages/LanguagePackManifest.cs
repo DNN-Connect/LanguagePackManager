@@ -68,16 +68,6 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
           }
         }
       }
-      foreach (var loc in LocaleRepository.Instance.GetLocales())
-      {
-        foreach (var localeId in handledLocaleIds)
-        {
-          if (loc.LocaleId == localeId || loc.GenericLocaleId == localeId)
-          {
-            Sprocs.RefreshLocaleTextCount(loc.LocaleId);
-          }
-        }
-      }
     }
 
     private void LoadPackV5FromUploadedZipFile(UnzipResult unzipResult)

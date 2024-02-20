@@ -12,6 +12,32 @@ namespace Connect.LanguagePackManager.Core.Data
 {
   public class Sprocs
   {
+    // UPDATE dbo.Connect_LPM_PackageVersionLocaleTextCounts
+    // SET NrTexts=-1, LastChange=y.LastModifiedOnDate
+    // FROM dbo.Connect_LPM_PackageVersionLocaleTextCounts x
+    // INNER JOIN
+    // (SELECT
+    //  pv.PackageVersionId,
+    //  tr.Locale,
+    //  MAX(tr.LastModifiedOnDate) LastModifiedOnDate
+    // FROM dbo.Connect_LPM_Translations tr
+    // INNER JOIN dbo.Connect_LPM_Texts t ON t.TextId=tr.TextId
+    // INNER JOIN dbo.Connect_LPM_ResourceFiles rf on rf.ResourceFileId=t.ResourceFileId
+    // INNER JOIN dbo.Connect_LPM_Packages p ON rf.PackageId=p.PackageId
+    // INNER JOIN dbo.Connect_LPM_PackageVersions pv ON p.PackageId=pv.PackageId
+    // GROUP BY tr.Locale, pv.PackageVersionId) y ON y.PackageVersionId=x.PackageVersionId AND y.Locale=x.LocaleId
+    // WHERE y.LastModifiedOnDate > x.LastChange
+    // ;  
+    public static void DetectChangesPackageVersionLocaleTextCounts()
+    {
+      using (var context = DataContext.Instance())
+      {
+        context.Execute(System.Data.CommandType.StoredProcedure,
+            "Connect_LPM_DetectChangesPackageVersionLocaleTextCounts"
+            );
+      }
+    }
+
     // SELECT TOP 1
     //  t.LastModifiedOnDate
     // FROM dbo.vw_Connect_LPM_Translations t
@@ -55,21 +81,41 @@ namespace Connect.LanguagePackManager.Core.Data
       }
     }
 
+    // DECLARE @TempTable TABLE 
+    // (
+    //    PackageName nvarchar(128),
+    //    Version varchar(15),
+    //    Code varchar(10),
+    //    TotalTexts int,
+    //    NrTexts int,
+    //    LastChange DATETIME
+    // );
+    // INSERT INTO @TempTable
     // SELECT
     //  p.PackageName,
     //  pv.Version,
-    //  l.Code,
+    //  locs.Code,
     //  pv.NrTexts TotalTexts,
-    //  x.NrTexts
+    //  x.NrTexts,
+    //  x.LastChange
     // FROM dbo.Connect_LPM_PackageVersionLocaleTextCounts x
     // INNER JOIN dbo.Connect_LPM_PackageVersions pv ON pv.PackageVersionId=x.PackageVersionId
     // INNER JOIN dbo.Connect_LPM_Packages p ON p.PackageId=pv.PackageId
     // INNER JOIN dbo.Connect_LPM_PackageLinks pl ON pl.PackageLinkId=p.LinkId
-    // INNER JOIN dbo.Connect_LPM_Locales l ON x.LocaleId=l.LocaleId
     // INNER JOIN dbo.Modules m ON m.ModuleID=pl.ModuleId
     // INNER JOIN @Packages paramp ON paramp.PackageName=p.PackageName AND paramp.Version = pv.Version
-    // INNER JOIN @Locales paraml ON paraml.LocaleCode=l.Code
-    // WHERE m.PortalID=@PortalId;  
+    // INNER JOIN (SELECT l1.*
+    // FROM dbo.Connect_LPM_Locales l1
+    // INNER JOIN @Locales paraml ON paraml.LocaleCode=l1.Code OR paraml.GenericCode=l1.Code) locs ON locs.LocaleId=x.LocaleId
+    // WHERE m.PortalID=@PortalId;
+    // SELECT
+    //  t.*
+    // FROM @TempTable t
+    // LEFT JOIN @TempTable t2 ON t2.PackageName=t.PackageName
+    //   AND t2.Version=t.Version
+    //   AND LEN(t2.Code)>LEN(t.Code)
+    //   AND CHARINDEX(t.Code, t2.Code) = 1
+    // WHERE t2.Code IS NULL;;  
     public static IEnumerable<GetStatDTO> GetStats(int PortalId, DataTable Packages, DataTable Locales)
     {
       var p1 = new SqlParameter()
@@ -93,56 +139,39 @@ namespace Connect.LanguagePackManager.Core.Data
             "Connect_LPM_GetStats",
             PortalId, p1, p2);
       }
-
-      //var dbInst = DataProvider.Instance();
-
-      //using (var c = new SqlConnection(dbInst.ConnectionString))
-      //{
-      //  var cmd = new SqlCommand(dbInst.DatabaseOwner + dbInst.ObjectQualifier + "Connect_LPM_GetStats", c);
-      //  cmd.CommandType = CommandType.StoredProcedure;
-      //  var p1 = cmd.Parameters.AddWithValue("@PortalId", PortalId);
-      //  p1.SqlDbType = SqlDbType.Int;
-      //  var p2 = cmd.Parameters.AddWithValue("@Packages", Packages);
-      //  p2.SqlDbType = SqlDbType.Structured;
-      //  var p3 = cmd.Parameters.AddWithValue("@Locales", Locales);
-      //  p3.SqlDbType = SqlDbType.Structured;
-      //  cmd.ExecuteReader();
-
-      //  var dp = new SqlParameter();
-
-      //}
-
     }
 
-    // DELETE FROM dbo.Connect_LPM_PackageVersionLocaleTextCounts
-    // WHERE LocaleId=@LocaleId;
     // INSERT INTO dbo.Connect_LPM_PackageVersionLocaleTextCounts
-    //     ([PackageVersionId]
-    //     ,[LocaleId]
-    //     ,[NrTexts])
+    // ([PackageVersionId]
+    // ,[LocaleId]
+    // ,[NrTexts]
+    // ,[LastChange])
     // SELECT
-    // pv.PackageVersionId,
-    // loc.LocaleId,
-    // (SELECT COUNT(txt.TextId)
-    // FROM dbo.vw_Connect_LPM_Texts txt
-    // LEFT JOIN dbo.Connect_LPM_Translations trg ON txt.TextId=trg.TextId AND trg.Locale=loc.GenericLocaleId
-    // LEFT JOIN dbo.Connect_LPM_Translations trs ON txt.TextId=trs.TextId AND trs.Locale=loc.LocaleId
-    // WHERE txt.PackageId=pv.PackageId
-    // AND txt.FirstInVersion <= pv.Version
-    // AND pv.Version < txt.DeprecatedInVersion
-    // AND NOT ISNULL(trg.TextValue, trs.TextValue) IS NULL) NrTexts
-    // FROM dbo.vw_Connect_LPM_PackageVersions pv
-    // INNER JOIN dbo.Connect_LPM_Locales loc ON loc.LocaleId=@LocaleId;;  
-    public static void RefreshLocaleTextCount(int localeId)
+    //  pv.PackageVersionId,
+    //  tr.Locale,
+    //  -1,
+    //  MAX(tr.LastModifiedOnDate) LastModifiedOnDate
+    // FROM dbo.Connect_LPM_Translations tr
+    // INNER JOIN dbo.Connect_LPM_Texts t ON t.TextId=tr.TextId
+    // INNER JOIN dbo.Connect_LPM_ResourceFiles rf on rf.ResourceFileId=t.ResourceFileId
+    // INNER JOIN dbo.Connect_LPM_Packages p ON rf.PackageId=p.PackageId
+    // INNER JOIN dbo.Connect_LPM_PackageVersions pv ON p.PackageId=pv.PackageId
+    // LEFT JOIN dbo.Connect_LPM_PackageVersionLocaleTextCounts x2 
+    //   ON x2.PackageVersionId=pv.PackageVersionId
+    //   AND x2.LocaleId=tr.Locale
+    // GROUP BY tr.Locale, pv.PackageVersionId, x2.PackageVersionId
+    // HAVING x2.PackageVersionId IS NULL;;  
+    public static void InsertMissingPackageVersionLocaleTextCounts()
     {
       using (var context = DataContext.Instance())
       {
         context.Execute(System.Data.CommandType.StoredProcedure,
-            "Connect_LPM_RefreshLocaleTextCount",
-            localeId);
+            "Connect_LPM_InsertMissingPackageVersionLocaleTextCounts"
+            );
       }
     }
 
+    // -- update the original nr of texts
     // UPDATE dbo.Connect_LPM_PackageVersions
     // SET NrTexts=x.NrTexts
     // FROM dbo.Connect_LPM_PackageVersions pv1
@@ -154,24 +183,26 @@ namespace Connect.LanguagePackManager.Core.Data
     // WHERE txt.PackageId=pv.PackageId
     // AND txt.FirstInVersion <= pv.Version
     // AND pv.Version < txt.DeprecatedInVersion) NrTexts
-    // FROM dbo.vw_Connect_LPM_PackageVersions pv) x ON x.PackageVersionId=pv1.PackageVersionId;
+    // FROM dbo.vw_Connect_LPM_PackageVersions pv) x ON x.PackageVersionId=pv1.PackageVersionId
+    // WHERE (pv1.PackageId=@PackageId OR @PackageId=-1);;  
+    public static void RefreshNrOriginalTexts(int PackageId)
+    {
+      using (var context = DataContext.Instance())
+      {
+        context.Execute(System.Data.CommandType.StoredProcedure,
+            "Connect_LPM_RefreshNrOriginalTexts",
+            PackageId);
+      }
+    }
+
+    // -- update the original nr of texts
+    // EXEC dbo.Connect_LPM_RefreshNrOriginalTexts -1;
+    // -- refresh translation counts
     // DELETE FROM dbo.Connect_LPM_PackageVersionLocaleTextCounts;
-    // INSERT INTO dbo.Connect_LPM_PackageVersionLocaleTextCounts
-    // ([PackageVersionId],[LocaleId],[NrTexts])
-    // SELECT
-    // pv.PackageVersionId,
-    // loc.LocaleId,
-    // (SELECT COUNT(txt.TextId)
-    // FROM dbo.vw_Connect_LPM_Texts txt
-    // LEFT JOIN dbo.Connect_LPM_Translations trg ON txt.TextId=trg.TextId AND trg.Locale=loc.GenericLocaleId
-    // LEFT JOIN dbo.Connect_LPM_Translations trs ON txt.TextId=trs.TextId AND trs.Locale=loc.LocaleId
-    // WHERE txt.PackageId=pv.PackageId
-    // AND txt.FirstInVersion <= pv.Version
-    // AND pv.Version < txt.DeprecatedInVersion
-    // AND NOT ISNULL(trg.TextValue, trs.TextValue) IS NULL) NrTexts
-    // FROM dbo.vw_Connect_LPM_PackageVersions pv
-    // INNER JOIN dbo.Connect_LPM_Locales loc ON 1=1
-    // WHERE NOT loc.GenericLocaleId IS NULL;;  
+    // -- first get a list of available translations
+    // EXEC dbo.Connect_LPM_InsertMissingPackageVersionLocaleTextCounts;
+    // -- now get the nr texts
+    // EXEC dbo.Connect_LPM_UpdatePackageVersionLocaleTextCounts;;  
     public static void RefreshNrTexts()
     {
       using (var context = DataContext.Instance())
@@ -209,6 +240,29 @@ namespace Connect.LanguagePackManager.Core.Data
         context.Execute(System.Data.CommandType.StoredProcedure,
             "Connect_LPM_SetTranslation",
             textId, locale, textValue, userId);
+      }
+    }
+
+    // UPDATE dbo.Connect_LPM_PackageVersionLocaleTextCounts
+    // SET NrTexts = (SELECT COUNT(txt.TextId)
+    // FROM dbo.vw_Connect_LPM_Texts txt
+    // LEFT JOIN dbo.Connect_LPM_Translations trg ON txt.TextId=trg.TextId AND trg.Locale=loc.GenericLocaleId
+    // LEFT JOIN dbo.Connect_LPM_Translations trs ON txt.TextId=trs.TextId AND trs.Locale=loc.LocaleId
+    // WHERE txt.PackageId=pv.PackageId
+    // AND txt.FirstInVersion <= pv.Version
+    // AND pv.Version < txt.DeprecatedInVersion
+    // AND NOT ISNULL(trg.TextValue, trs.TextValue) IS NULL)
+    // FROM dbo.Connect_LPM_PackageVersionLocaleTextCounts x
+    // INNER JOIN dbo.Connect_LPM_PackageVersions pv ON pv.PackageVersionId=x.PackageVersionId
+    // INNER JOIN dbo.Connect_LPM_Locales loc on loc.LocaleId=x.LocaleId
+    // WHERE x.NrTexts=-1;;  
+    public static void UpdatePackageVersionLocaleTextCounts()
+    {
+      using (var context = DataContext.Instance())
+      {
+        context.Execute(System.Data.CommandType.StoredProcedure,
+            "Connect_LPM_UpdatePackageVersionLocaleTextCounts"
+            );
       }
     }
 

@@ -24,11 +24,6 @@ namespace Connect.LanguagePackManager.Core.Services.Github
       var gh3 = gh2.Where(gp => gp.Prerelease == false);
       var gh4 = gh3.Where(gp => (string.IsNullOrEmpty(package.LastDownloadedVersion) || baseVersion.IsSmallerThan(gp.TagName.ParseVersion().ToNormalizedFormat())));
       var githubVersions = gh4.OrderBy(p => p.Published);
-      //var githubVersions = GithubService.GetReleases(package.OrgName, package.RepoName)
-      //    .Where(gp => gp.Draft == false
-      //                && gp.Prerelease == false
-      //                && (string.IsNullOrEmpty(package.LastDownloadedVersion) || baseVersion.IsSmallerThan(gp.TagName.ParseVersion().ToNormalizedFormat())))
-      //    .OrderBy(p => p.Published);
       foreach (var githubVersion in githubVersions)
       {
         foreach (var download in githubVersion.Assets)
@@ -54,9 +49,10 @@ namespace Connect.LanguagePackManager.Core.Services.Github
       Logger.Info($"Finished checking package repo {package.Name}");
     }
 
-    public static void CheckResourcesRepo(PackageLink package)
+    public static int CheckResourcesRepo(PackageLink package)
     {
       Logger.Info($"Checking resources repo {package.Name}");
+      var downloadedReleases = 0;
       var lastCommit = GithubService.GetLastCommit(package.OrgName, package.RepoName);
       if (lastCommit != null && lastCommit.Details != null && lastCommit.Details.Committer != null)
       {
@@ -80,6 +76,7 @@ namespace Connect.LanguagePackManager.Core.Services.Github
                   var unzipResult = ZipHelper.Unzip(result, "", true);
                   var manifest = new LanguagePackManifest(unzipResult, package.ModuleId);
                   manifest.Process(true, -1);
+                  downloadedReleases++;
 
                   try
                   {
@@ -109,6 +106,7 @@ namespace Connect.LanguagePackManager.Core.Services.Github
               var unzipResult = ZipHelper.Unzip(strm, "", true);
               var manifest = new LanguagePackManifest(unzipResult, package.ModuleId);
               manifest.Process(true, -1);
+              downloadedReleases++;
 
               try
               {
@@ -124,6 +122,7 @@ namespace Connect.LanguagePackManager.Core.Services.Github
       package.LastChecked = DateTime.Now;
       PackageLinkRepository.Instance.UpdatePackageLink(package.GetPackageLinkBase(), -1);
       Logger.Info($"Finished checking resources repo {package.Name}");
+      return downloadedReleases;
     }
 
     public static string GetGithubPackage(string url)

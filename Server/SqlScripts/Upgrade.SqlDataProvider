@@ -1,4 +1,8 @@
 /******* SPROCS *******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_DetectChangesPackageVersionLocaleTextCounts') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}Connect_LPM_DetectChangesPackageVersionLocaleTextCounts
+GO
+
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_GetLastEditTime') AND type in (N'P', N'PC'))
 DROP PROCEDURE {databaseOwner}{objectQualifier}Connect_LPM_GetLastEditTime
 GO
@@ -13,10 +17,6 @@ GO
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_InsertMissingPackageVersionLocaleTextCounts') AND type in (N'P', N'PC'))
 DROP PROCEDURE {databaseOwner}{objectQualifier}Connect_LPM_InsertMissingPackageVersionLocaleTextCounts
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_RefreshLocaleTextCount') AND type in (N'P', N'PC'))
-DROP PROCEDURE {databaseOwner}{objectQualifier}Connect_LPM_RefreshLocaleTextCount
 GO
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}Connect_LPM_RefreshNrOriginalTexts') AND type in (N'P', N'PC'))
@@ -196,6 +196,29 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}Connect_LPM_DetectChangesPackageVersionLocaleTextCounts
+AS
+UPDATE {databaseOwner}{objectQualifier}Connect_LPM_PackageVersionLocaleTextCounts
+SET NrTexts=-1, LastChange=y.LastModifiedOnDate
+FROM {databaseOwner}{objectQualifier}Connect_LPM_PackageVersionLocaleTextCounts x
+INNER JOIN
+(SELECT
+ pv.PackageVersionId,
+ tr.Locale,
+ MAX(tr.LastModifiedOnDate) LastModifiedOnDate
+FROM {databaseOwner}{objectQualifier}Connect_LPM_Translations tr
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_Texts t ON t.TextId=tr.TextId
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_ResourceFiles rf on rf.ResourceFileId=t.ResourceFileId
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_Packages p ON rf.PackageId=p.PackageId
+INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageVersions pv ON p.PackageId=pv.PackageId
+GROUP BY tr.Locale, pv.PackageVersionId) y ON y.PackageVersionId=x.PackageVersionId AND y.Locale=x.LocaleId
+WHERE y.LastModifiedOnDate > x.LastChange
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE PROCEDURE {databaseOwner}{objectQualifier}Connect_LPM_GetLastEditTime
 @PackageId INT,
 @Version VARCHAR(10),
@@ -311,34 +334,6 @@ LEFT JOIN {databaseOwner}{objectQualifier}Connect_LPM_PackageVersionLocaleTextCo
   AND x2.LocaleId=tr.Locale
 GROUP BY tr.Locale, pv.PackageVersionId, x2.PackageVersionId
 HAVING x2.PackageVersionId IS NULL;
-GO
-
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE {databaseOwner}{objectQualifier}Connect_LPM_RefreshLocaleTextCount
-@LocaleId INT
-AS
-DELETE FROM {databaseOwner}{objectQualifier}Connect_LPM_PackageVersionLocaleTextCounts
-WHERE LocaleId=@LocaleId;
-INSERT INTO {databaseOwner}{objectQualifier}Connect_LPM_PackageVersionLocaleTextCounts
-    ([PackageVersionId]
-    ,[LocaleId]
-    ,[NrTexts])
-SELECT
-pv.PackageVersionId,
-loc.LocaleId,
-(SELECT COUNT(txt.TextId)
-FROM {databaseOwner}{objectQualifier}vw_Connect_LPM_Texts txt
-LEFT JOIN {databaseOwner}{objectQualifier}Connect_LPM_Translations trg ON txt.TextId=trg.TextId AND trg.Locale=loc.GenericLocaleId
-LEFT JOIN {databaseOwner}{objectQualifier}Connect_LPM_Translations trs ON txt.TextId=trs.TextId AND trs.Locale=loc.LocaleId
-WHERE txt.PackageId=pv.PackageId
-AND txt.FirstInVersion <= pv.Version
-AND pv.Version < txt.DeprecatedInVersion
-AND NOT ISNULL(trg.TextValue, trs.TextValue) IS NULL) NrTexts
-FROM {databaseOwner}{objectQualifier}vw_Connect_LPM_PackageVersions pv
-INNER JOIN {databaseOwner}{objectQualifier}Connect_LPM_Locales loc ON loc.LocaleId=@LocaleId;
 GO
 
 SET ANSI_NULLS ON
