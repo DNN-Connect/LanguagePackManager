@@ -1,0 +1,7 @@
+DELETE FROM {databaseOwner}{objectQualifier}Connect_LPM_PackageVersionLocaleTextCounts
+GO
+
+ALTER TABLE {databaseOwner}{objectQualifier}Connect_LPM_PackageVersionLocaleTextCounts
+ADD [LastChange] DATETIME NOT NULL
+GO
+
