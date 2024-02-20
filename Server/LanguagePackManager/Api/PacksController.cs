@@ -57,8 +57,7 @@ namespace Connect.LanguagePackManager.Presentation.Api
         return Request.CreateResponse(HttpStatusCode.InternalServerError);
       }
       var loc = LocaleRepository.Instance.GetOrCreateLocale(netLocale.Name);
-      var nrTexts = PackageVersionLocaleTextCountRepository.Instance.GetPackageVersionLocaleTextCounts(loc.LocaleId)
-          .Where(t => t.PackageId == id)
+      var nrTexts = PackageVersionLocaleTextCountRepository.Instance.GetPackageVersionLocaleTextCounts(id, loc.LocaleId)
           .ToList();
       return Request.CreateResponse(HttpStatusCode.OK, nrTexts);
     }
