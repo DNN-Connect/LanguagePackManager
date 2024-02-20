@@ -22,6 +22,8 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersionLocaleTextCounts
         public int LocaleId { get; set; }
         [DataMember]
         public int NrTexts { get; set; }
+        [DataMember]
+        public DateTime LastChange { get; set; }
         #endregion
 
         #region Methods
@@ -30,6 +32,7 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersionLocaleTextCounts
             PackageVersionId = packageVersionLocaleTextCount.PackageVersionId;
             LocaleId = packageVersionLocaleTextCount.LocaleId;
             NrTexts = packageVersionLocaleTextCount.NrTexts;
+            LastChange = packageVersionLocaleTextCount.LastChange;
         }
         #endregion
 

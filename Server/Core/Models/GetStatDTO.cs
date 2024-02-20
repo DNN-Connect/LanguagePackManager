@@ -1,4 +1,6 @@
-﻿namespace Connect.LanguagePackManager.Core.Models
+﻿using System;
+
+namespace Connect.LanguagePackManager.Core.Models
 {
   public class GetStatDTO
   {
@@ -7,5 +9,6 @@
     public string Code { get; set; }
     public int TotalTexts { get; set; }
     public int NrTexts { get; set; }
+    public DateTime LastChange { get; set; }
   }
 }

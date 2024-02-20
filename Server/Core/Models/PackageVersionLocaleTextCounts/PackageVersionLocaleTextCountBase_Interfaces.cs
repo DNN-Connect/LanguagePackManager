@@ -21,6 +21,8 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersionLocaleTextCounts
      return LocaleId.ToString(strFormat, formatProvider);
     case "nrtexts": // Int
      return NrTexts.ToString(strFormat, formatProvider);
+    case "lastchange": // DateTime
+     return LastChange.ToString(strFormat, formatProvider);
                 default:
                     propertyNotFound = true;
                     break;

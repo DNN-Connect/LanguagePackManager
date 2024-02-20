@@ -30,6 +30,7 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersionLocaleTextCounts
              res.PackageVersionId = PackageVersionId;
              res.LocaleId = LocaleId;
              res.NrTexts = NrTexts;
+             res.LastChange = LastChange;
             return res;
         }
         public PackageVersionLocaleTextCount Clone()
@@ -38,6 +39,7 @@ namespace Connect.LanguagePackManager.Core.Models.PackageVersionLocaleTextCounts
             res.PackageVersionId = PackageVersionId;
             res.LocaleId = LocaleId;
             res.NrTexts = NrTexts;
+            res.LastChange = LastChange;
             res.OriginalNr = OriginalNr;
             res.PackageId = PackageId;
             return res;
