@@ -18,6 +18,8 @@ namespace Connect.LanguagePackManager.Core.Models.Packages
    switch (strPropertyName.ToLower()) {
     case "name": // NVarChar
      return PropertyAccess.FormatString(Name, strFormat);
+    case "isresourcesrepo": // Bit
+     return IsResourcesRepo.ToString();
     case "lastchecked": // DateTime
      if (LastChecked == null)
      {
@@ -26,6 +28,12 @@ namespace Connect.LanguagePackManager.Core.Models.Packages
      return ((DateTime)LastChecked).ToString(strFormat, formatProvider);
     case "moduleid": // Int
      return ModuleId.ToString(strFormat, formatProvider);
+    case "portalid": // Int
+     if (PortalID == null)
+     {
+         return "";
+     };
+     return ((int)PortalID).ToString(strFormat, formatProvider);
     default:
        return base.GetProperty(strPropertyName, strFormat, formatProvider, accessingUser, accessLevel, ref propertyNotFound);
    }

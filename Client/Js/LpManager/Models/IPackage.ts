@@ -7,8 +7,10 @@ export interface IPackage {
   InstallPath: string;
   LastVersion: string;
   Name: string;
+  IsResourcesRepo: boolean;
   LastChecked?: Date;
   ModuleId: number;
+  PortalID?: number;
 }
 
 export class Package implements IPackage {
@@ -20,8 +22,10 @@ export class Package implements IPackage {
   InstallPath: string;
   LastVersion: string;
   Name: string;
+  IsResourcesRepo: boolean;
   LastChecked?: Date;
   ModuleId: number;
+  PortalID?: number;
     constructor() {
   this.PackageId = -1;
   this.LinkId = -1;
@@ -29,6 +33,7 @@ export class Package implements IPackage {
   this.FriendlyName = "";
   this.PackageType = "";
   this.Name = "";
+  this.IsResourcesRepo = false;
   this.ModuleId = -1;
    }
 }

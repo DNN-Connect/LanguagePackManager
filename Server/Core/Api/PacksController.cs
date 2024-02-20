@@ -14,6 +14,17 @@ namespace Connect.LanguagePackManager.Core.Api
 {
   public class PacksController : DnnApiController
   {
+    [HttpGet]
+    [AllowAnonymous]
+    public HttpResponseMessage Components()
+    {
+      var res = PackageRepository.Instance.GetPackagesByPortal(PortalSettings.PortalId)
+                  .Where(p => !p.IsResourcesRepo)
+                  .Select(p => p.PackageName);
+      return Request.CreateResponse(HttpStatusCode.OK, res);
+    }
+
+
     public class ResxResources
     {
       public IDictionary<string, IDictionary<string, string>> Resources { get; set; }
@@ -95,20 +106,19 @@ namespace Connect.LanguagePackManager.Core.Api
         packages.Rows.Add(p.PackageName, p.Version.ParseVersion().ToNormalizedFormat());
       }
 
-      var existingLocales = LocaleRepository.Instance.GetLocales();
-
       var locales = new DataTable();
-      locales.Columns.Add("Version");
+      locales.Columns.Add("LocaleCode");
+      locales.Columns.Add("GenericCode");
 
       foreach (var l in data.Locales)
       {
-        if (existingLocales.FirstOrDefault(l1 => l1.Code == l) != null)
+        if (l.IndexOf("-") > 0)
         {
-          locales.Rows.Add(l);
+          locales.Rows.Add(l, l.Substring(0, l.IndexOf("-")));
         }
-        else if (l.IndexOf("-") > 0 && existingLocales.FirstOrDefault(l1 => l1.Code == l.Substring(0, l.IndexOf("-"))) != null)
+        else
         {
-          locales.Rows.Add(l.Substring(0, l.IndexOf("-")));
+          locales.Rows.Add(l, l);
         }
       }
 
