@@ -50,9 +50,14 @@ namespace Connect.LanguagePackManager.Core.Data
     {
       using (var context = DataContext.Instance())
       {
-        return context.ExecuteScalar<DateTime>(System.Data.CommandType.StoredProcedure,
+        var res = context.ExecuteScalar<object>(System.Data.CommandType.StoredProcedure,
             "Connect_LPM_GetLastEditTime",
             packageId, version, localeMain, localeSpecific);
+        if (res == null)
+        {
+          return DateTime.MinValue;
+        }
+        return (DateTime)res;
       }
     }
 
