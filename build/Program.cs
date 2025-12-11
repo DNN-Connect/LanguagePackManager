@@ -9,6 +9,7 @@ using Cake.Frosting;
 using Cake.Npm;
 using Dnn.CakeUtils;
 using Dnn.CakeUtils.Manifest;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,6 +18,7 @@ public static class Program
     public static int Main(string[] args)
     {
         return new CakeHost()
+            .InstallTool(new Uri("nuget:?package=NuGet.CommandLine&version=5.8.1"))
             .UseContext<BuildContext>()
             .Run(args);
     }
