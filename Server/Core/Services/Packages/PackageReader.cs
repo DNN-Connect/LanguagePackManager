@@ -23,6 +23,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
     public string ErrorMessage { get; set; } = "";
     public bool IsCore { get; set; } = false;
     public Manifest Manifest { get; set; } = null;
+    private List<string> FoundFileKeys { get; set; } = new List<string>();
 
     public PackageReader(int packageLinkId, int parentPackageVersionId, string zipFilePath)
     {
@@ -57,7 +58,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
         {
           Logger.Error("Cannot parse manifest of package");
           Logger.Error(ex);
-          this.IsInError= true;
+          this.IsInError = true;
           this.ErrorMessage = "Cannot parse manifest of package";
         }
       }
@@ -157,6 +158,8 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
       package.LastChecked = DateTime.Now;
       PackageRepository.Instance.UpdatePackage(package.GetPackageBase());
 
+      this.CheckAndDeprecateEntireResourcesFiles(packageVersion);
+
       Sprocs.RefreshNrOriginalTexts(package.PackageId);
 
       return packageVersion.PackageVersionId;
@@ -165,6 +168,10 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
     private void ProcessResourceFile(PackageVersion packageVersion, string highestVersion, string fileKey, string filePath)
     {
       fileKey = fileKey.Trim('/');
+      if (!FoundFileKeys.Contains(fileKey))
+      {
+        FoundFileKeys.Add(fileKey);
+      }
       var processingNewPackage = packageVersion.Version.IsBiggerThan(highestVersion);
 
       var resFile = ResourceFileRepository.Instance.GetResourceFilesByPackage(packageVersion.PackageId).FirstOrDefault(r => r.FilePath == fileKey);
@@ -273,6 +280,23 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
         foreach (var dbText in textsInDb.Where(t => t.DeprecatedInVersion == "99.99.99"))
         {
           if (!foundTexts.Keys.Contains(dbText.TextKey))
+          {
+            dbText.DeprecatedInVersionId = packageVersion.PackageVersionId;
+            TextRepository.Instance.UpdateText(dbText.GetTextBase());
+          }
+        }
+      }
+    }
+
+    private void CheckAndDeprecateEntireResourcesFiles(PackageVersion packageVersion)
+    {
+      var allResFiles = ResourceFileRepository.Instance.GetResourceFilesByPackage(packageVersion.PackageId);
+      foreach (var resFile in allResFiles)
+      {
+        if (!FoundFileKeys.Contains(resFile.FilePath))
+        {
+          var textsInDb = TextRepository.Instance.GetTextsByResourceFile(resFile.ResourceFileId);
+          foreach (var dbText in textsInDb.Where(t => t.DeprecatedInVersion == "99.99.99"))
           {
             dbText.DeprecatedInVersionId = packageVersion.PackageVersionId;
             TextRepository.Instance.UpdateText(dbText.GetTextBase());
