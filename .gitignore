@@ -4,6 +4,7 @@ _Development
 **/bin
 **/obj
 **/*.user
+.codegen.json
 local.json
 node_modules
 Releases
