@@ -24,6 +24,7 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
     public bool IsCore { get; set; } = false;
     public Manifest Manifest { get; set; } = null;
     private List<string> FoundFileKeys { get; set; } = new List<string>();
+    private List<int> ProcessedPackageIds { get; set; } = new List<int>();
 
     public PackageReader(int packageLinkId, int parentPackageVersionId, string zipFilePath)
     {
@@ -101,6 +102,11 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
       catch (Exception ex)
       {
       }
+
+      if (this.IsCore)
+      {
+        this.CheckForEntirePackageDeprecation(this.PackageLinkId, this.UnzipResult.DnnVersion.ToNormalizedFormat());
+      }
     }
 
     private int ProcessPackage(string packageName, string folderName, string packageType, string friendlyName, Version pVersion, DateTime releaseDate, UnzipResult extraFiles = null)
@@ -120,6 +126,15 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
           PackageType = packageType
         };
         package.PackageId = PackageRepository.Instance.AddPackage(package.GetPackageBase()).PackageId;
+      }
+      if (!ProcessedPackageIds.Contains(package.PackageId))
+      {
+        ProcessedPackageIds.Add(package.PackageId);
+      }
+      else
+      {
+        // already processed this package in this run
+        return -1;
       }
 
       var packageVersion = PackageVersionRepository.Instance.GetPackageVersionsByPackage(package.PackageId).FirstOrDefault(pv => pv.Version == version);
@@ -303,7 +318,47 @@ namespace Connect.LanguagePackManager.Core.Services.Packages
           }
         }
       }
+    }
 
+    private void CheckForEntirePackageDeprecation(int packageLinkId, string parentVersion)
+    {
+      var packagesInDb = PackageRepository.Instance.GetPackagesByPackageLink(packageLinkId);
+      foreach (var package in packagesInDb)
+      {
+        if (!ProcessedPackageIds.Contains(package.PackageId))
+        {
+          var allResourceFiles = ResourceFileRepository.Instance.GetResourceFilesByPackage(package.PackageId);
+          if (allResourceFiles.Count() > 0)
+          {
+            var packageVersions = PackageVersionRepository.Instance.GetPackageVersionsByPackage(package.PackageId);
+            var lastVersion = packageVersions.OrderByDescending(pv => pv.Version.ParseVersion()).FirstOrDefault();
+            if (lastVersion != null && lastVersion.NrTexts.HasValue && lastVersion.NrTexts.Value > 0)
+            {
+              if (lastVersion == null || lastVersion.Version.ParseVersion().CompareTo(parentVersion.ParseVersion()) < 0)
+              {
+                lastVersion = new PackageVersion()
+                {
+                  PackageId = package.PackageId,
+                  Version = parentVersion,
+                  ReleaseDate = DateTime.Now,
+                  Downloaded = DateTime.Now
+                };
+                lastVersion.PackageVersionId = PackageVersionRepository.Instance.AddPackageVersion(lastVersion.GetPackageVersionBase()).PackageVersionId;
+              }
+
+              foreach (var resourceFile in allResourceFiles)
+              {
+                var textsInDb = TextRepository.Instance.GetTextsByResourceFile(resourceFile.ResourceFileId);
+                foreach (var dbText in textsInDb.Where(t => t.DeprecatedInVersion == "99.99.99"))
+                {
+                  dbText.DeprecatedInVersionId = lastVersion.PackageVersionId;
+                  TextRepository.Instance.UpdateText(dbText.GetTextBase());
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
